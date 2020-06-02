@@ -10,7 +10,7 @@ public class Lecteur {
     }
 
     public String getLigne (){
-
+        return "";
     }
 
     public void next(){
