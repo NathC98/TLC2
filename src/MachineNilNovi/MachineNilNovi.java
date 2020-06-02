@@ -3,7 +3,7 @@ package MachineNilNovi;
 public class MachineNilNovi {
     private Lecteur lecteur;
     private int ip;
-    private ArrayList<Integer> maPile
+    private ArrayList<Integer> maPile;
     private ArrayList<Object> TableIdentificateur;
     private boolean fin;
 
