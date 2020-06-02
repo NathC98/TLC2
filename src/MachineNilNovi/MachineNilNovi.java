@@ -3,10 +3,14 @@ package MachineNilNovi;
 public class MachineNilNovi {
     private Lecteur lecteur;
     private int ip;
-    private ArrayList<Integer> maPile;
-    private ArrayList registres;
-    private Arraylist TableIdentificateur;
+    private ArrayList<Integer> maPile
+    private Arraylist<Object> TableIdentificateur;
     private boolean fin;
+
+    public MachineNilNovi(ArrayList<Object> ids, String fichier){
+        this.TableIdentificateur = ids;
+        this.lecteur = new Lecteur(fichier);
+    }
 
     public void debutProg(){
         maPile = new Stack<Integer>();
