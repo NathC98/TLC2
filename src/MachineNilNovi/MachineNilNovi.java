@@ -4,7 +4,7 @@ public class MachineNilNovi {
     private Lecteur lecteur;
     private int ip;
     private ArrayList<Integer> maPile
-    private Arraylist<Object> TableIdentificateur;
+    private ArrayList<Object> TableIdentificateur;
     private boolean fin;
 
     public MachineNilNovi(ArrayList<Object> ids, String fichier){
@@ -13,7 +13,7 @@ public class MachineNilNovi {
     }
 
     public void debutProg(){
-        maPile = new Stack<Integer>();
+        maPile = new ArrayList<Integer>();
         registres = new ArrayList<>();
         this.fin = false;
     }

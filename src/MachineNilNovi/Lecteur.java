@@ -14,7 +14,7 @@ public class Lecteur {
     }
 
     public void next(){
-        ligne = ligne + 1
+        ligne = ligne + 1;
     }
 
     public void go(int ligne){
