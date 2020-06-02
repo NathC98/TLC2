@@ -45,11 +45,20 @@ public class MachineNilNovi {
 
     public void valeurPile(){
         if (!fin){
+            int val =maPile.get(maPile.get(ip));
+            maPile.set(ip,val);
         }
     }
 
     public void get(){
         if (!fin){
+            Scanner s = new Scanner(System.in);
+            System.out.println("Veuillez rentrer une valeur : \n");
+            entrer = s.nextInt();
+            maPile.set(maPile.get(ip),entrer);
+            maPile.remove(ip);
+            ip = ip - 1;
+
         }
     }
 
