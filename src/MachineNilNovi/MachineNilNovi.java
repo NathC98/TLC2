@@ -229,7 +229,7 @@ public class MachineNilNovi {
         }
     }
 
-    public void parse(string s){
+    public void parse(String s){
 
     }
 
