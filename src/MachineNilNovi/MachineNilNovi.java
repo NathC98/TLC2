@@ -3,8 +3,9 @@ package MachineNilNovi;
 public class MachineNilNovi {
     private Lecteur lecteur;
     private int ip;
-    private ArrayList<Integer> maPile;
-    private ArrayList<Object> TableIdentificateur;
+    private int base;
+    private ArrayList<Integer> maPile
+    private Arraylist<Object> TableIdentificateur;
     private boolean fin;
 
     public MachineNilNovi(ArrayList<Object> ids, String fichier){
@@ -15,6 +16,8 @@ public class MachineNilNovi {
     public void debutProg(){
         maPile = new ArrayList<Integer>();
         this.fin = false;
+        this.ip = 1;
+        this.base = 0
     }
 
     public void finProg(){
@@ -229,6 +232,25 @@ public class MachineNilNovi {
         }
     }
 
+    public void reserverBloc(){
+
+    }
+
+    public void traStat(int a, int nbp){
+
+    }
+
+    public void retourFonction(){
+
+    }
+
+    public void retourProc(){
+
+    }
+
+    public void empilerParam(int ad){
+
+    }
     public void parse(String s){
 
     }
