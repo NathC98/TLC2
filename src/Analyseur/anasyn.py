@@ -14,7 +14,7 @@ logger = logging.getLogger('anasyn')
 
 DEBUG = False
 LOGGING_LEVEL = logging.DEBUG
-
+codeGenerator = []
 
 class AnaSynException(Exception):
 	def __init__(self, value):
@@ -31,6 +31,9 @@ def program(lexical_analyser):
 	lexical_analyser.acceptKeyword("is")
 	corpsProgPrinc(lexical_analyser)
 	
+	codeGenerator.append("debutProg(); \n")
+	codeGenerator.append("tra(ad1); \n")
+
 def specifProgPrinc(lexical_analyser):
 	lexical_analyser.acceptKeyword("procedure")
 	ident = lexical_analyser.acceptIdentifier()
@@ -51,6 +54,8 @@ def  corpsProgPrinc(lexical_analyser):
 	lexical_analyser.acceptKeyword("end")
 	lexical_analyser.acceptFel()
 	logger.debug("End of program")
+
+	codeGenerator.append("finProg(); \n")
 	
 def partieDecla(lexical_analyser):
         if lexical_analyser.isKeyword("procedure") or lexical_analyser.isKeyword("function") :
@@ -349,6 +354,9 @@ def elemPrim(lexical_analyser):
 		lexical_analyser.acceptCharacter(")")
 	elif lexical_analyser.isInteger() or lexical_analyser.isKeyword("true") or lexical_analyser.isKeyword("false"):
 		valeur(lexical_analyser)
+
+		codeGenerator.append("empiler(); \n")
+
 	elif lexical_analyser.isIdentifier():
 		ident = lexical_analyser.acceptIdentifier()
 		if lexical_analyser.isCharacter("("):			# Appel fonct
@@ -415,6 +423,9 @@ def boucle(lexical_analyser):
 	expression(lexical_analyser)
 
 	lexical_analyser.acceptKeyword("loop")
+
+	codeGenerator.append("tze(ad2); \n")
+
 	suiteInstr(lexical_analyser)
 
 	lexical_analyser.acceptKeyword("end")
@@ -427,6 +438,9 @@ def altern(lexical_analyser):
 	expression(lexical_analyser)
        
 	lexical_analyser.acceptKeyword("then")
+
+	codeGenerator.append("tze(ad1); \n")
+
 	suiteInstr(lexical_analyser)
 
 	if lexical_analyser.isKeyword("else"):
@@ -540,10 +554,12 @@ def main():
 			output_file = sys.stdout
 
 	# Outputs the generated code to a file
-	#instrIndex = 0
-	#while instrIndex < codeGenerator.get_instruction_counter():
-	#        output_file.write("%s\n" % str(codeGenerator.get_instruction_at_index(instrIndex)))
-	#        instrIndex += 1
+	instrIndex = 0
+	while instrIndex < len(codeGenerator):
+		output_file.write(codeGenerator[instrIndex])
+	##while instrIndex < codeGenerator.get_instruction_counter():
+	##	output_file.write("%s\n" % str(codeGenerator.get_instruction_at_index(instrIndex)))
+		instrIndex += 1
 		
 	if outputFilename != "":
 			output_file.close() 

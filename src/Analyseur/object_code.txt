@@ -1,0 +1,12 @@
+12empiler(); 
+empiler(); 
+tze(ad2); 
+empiler(); 
+empiler(); 
+tze(ad2); 
+empiler(); 
+empiler(); 
+empiler(); 
+finProg(); 
+debutProg(); 
+tra(ad1); 
