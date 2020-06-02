@@ -14,7 +14,6 @@ public class MachineNilNovi {
 
     public void debutProg(){
         maPile = new ArrayList<Integer>();
-        registres = new ArrayList<>();
         this.fin = false;
     }
 
