@@ -230,4 +230,8 @@ public class MachineNilNovi {
         }
     }
 
+    public void parse(string s){
+
+    }
+
 }
