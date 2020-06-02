@@ -9,7 +9,7 @@ public class MachineNilNovi {
 
     public MachineNilNovi(ArrayList<Object> ids, String fichier){
         this.TableIdentificateur = ids;
-        this.lecteur = new Lecteur(fichier);
+        this.lecteur = new Lecteur(fichier)
     }
 
     public void debutProg(){
@@ -30,7 +30,7 @@ public class MachineNilNovi {
 
     public void empiler(int val){
         if (!fin){
-            maPile[ip] = val;
+            maPile.add(ip, val);
             ip++;
         }
     }
