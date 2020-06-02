@@ -53,7 +53,7 @@ public class MachineNilNovi {
         if (!fin){
             Scanner s = new Scanner(System.in);
             System.out.println("Veuillez rentrer une valeur : \n");
-            entrer = s.nextInt();
+            int entrer = s.nextInt();
             maPile.set(maPile.get(ip),entrer);
             maPile.remove(ip);
             ip = ip - 1;
