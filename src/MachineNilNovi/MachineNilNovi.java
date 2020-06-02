@@ -9,7 +9,7 @@ public class MachineNilNovi {
 
     public MachineNilNovi(ArrayList<Object> ids, String fichier){
         this.TableIdentificateur = ids;
-        this.lecteur = new Lecteur(fichier)
+        this.lecteur = new Lecteur(fichier);
     }
 
     public void debutProg(){
@@ -69,7 +69,7 @@ public class MachineNilNovi {
 
     public void moins(){
         if (!fin){
-            maPile.set(ip, -maPile.get(ip))
+            maPile.set(ip, -maPile.get(ip));
         }
     }
 
