@@ -3,6 +3,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class Lecteur {
     private String fichier;
@@ -14,7 +15,7 @@ public class Lecteur {
         this.co = 1;
         BufferedReader lecteurAvecBuffer = null;
         String ligne;
-
+        file = new ArrayList<String>();
         try
         {
             lecteurAvecBuffer = new BufferedReader(new FileReader(fichier));
@@ -23,8 +24,9 @@ public class Lecteur {
         {
             System.out.println("Erreur d'ouverture");
         }
-        while ((ligne = lecteurAvecBuffer.readLine()) != null)
+        while ((ligne = lecteurAvecBuffer.readLine()) != null) {
             file.add(ligne);
+        }
         lecteurAvecBuffer.close();
     }
 
@@ -52,7 +54,7 @@ public class Lecteur {
     }
 
     public static void main(String[] args) throws IOException {
-        Lecteur lecteur = new Lecteur("./text1.txt");
+        Lecteur lecteur = new Lecteur("codeObjets\\text1.txt");
         System.out.println(lecteur.getLigne());
     }
 }
