@@ -326,7 +326,15 @@ public class MachineNilNovi {
     }
 
     public void parse(String s){
-
+        String sligne = lecteur.getLigne();
+        String nomFonct;
+        String param;
+        int s = 0
+        while(lecteur.charAt(s) != '('){
+            s++;
+        }
+        nomFonct = lecteur.substring(0,s);
+        param = lecteur.substring(s)
     }
 
     public int getIp() {
