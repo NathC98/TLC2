@@ -269,7 +269,7 @@ public class MachineNilNovi {
     public void empilerad(int ad){
         if (!fin){
             ip++;
-            maPile.set(ip, base + ad + 2);
+            maPile.add(ip, base + ad + 2);
         }
         co++;
     }
