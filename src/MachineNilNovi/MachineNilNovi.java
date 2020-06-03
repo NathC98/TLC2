@@ -5,7 +5,7 @@ public class MachineNilNovi {
     private int ip;
     private int base;
     private ArrayList<Integer> maPile
-    private Arraylist<Object> TableIdentificateur;
+    private ArrayList<Object> TableIdentificateur;
     private boolean fin;
 
     public MachineNilNovi(ArrayList<Object> ids, String fichier){
@@ -15,6 +15,7 @@ public class MachineNilNovi {
 
     public void debutProg(){
         maPile = new ArrayList<Integer>();
+        maPile.add(0);
         this.fin = false;
         this.ip = 1;
         this.base = 0
@@ -37,7 +38,7 @@ public class MachineNilNovi {
 
     public void empiler(int val){
         if (!fin){
-            maPile.set(ip, val);
+            maPile.add(ip, val);
             ip++;
         }
     }
@@ -52,7 +53,7 @@ public class MachineNilNovi {
 
     public void valeurPile(){
         if (!fin){
-            int val =maPile.get(maPile.get(ip));
+            int val = maPile.get(maPile.get(ip));
             maPile.set(ip,val);
         }
     }
