@@ -38,7 +38,7 @@ public class MachineNilNovi {
 
     public void empiler(int val){
         if (!fin){
-            maPile.add(ip, val);
+            maPile.add(val);
             ip++;
         }
     }
@@ -48,6 +48,9 @@ public class MachineNilNovi {
             Integer i = maPile.get(ip);
             Integer j = maPile.get(ip - 1);
             if (j < ip) maPile.set(j, i);
+            maPile.remove(ip);
+            maPile.remove(ip - 1);
+            ip = ip - 2;
         }
     }
 
