@@ -27,10 +27,10 @@ public class MachineNilNovi {
     public void reserver(int n){
         if (!fin){
             if (n >= 0) {
-                for (int i = 0; i < n - 1; i++){
-                    maPile.add(0)
+                for (int i = 0; i < n; i++){
+                    maPile.add(0);
                 }
-                ip = n-1;
+                ip = ip + n - 1;
             }
         }
     }
