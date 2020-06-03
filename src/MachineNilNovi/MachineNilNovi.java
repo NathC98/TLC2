@@ -286,4 +286,15 @@ public class MachineNilNovi {
 
     }
 
+    public int getIp() {
+        return ip;
+    }
+
+    public int getBase() {
+        return base;
+    }
+
+    public ArrayList<Integer> getMaPile() {
+        return maPile;
+    }
 }
