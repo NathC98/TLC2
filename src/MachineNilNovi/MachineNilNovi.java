@@ -257,7 +257,7 @@ public class MachineNilNovi {
 
     public void traStat(int a, int nbp){
         if (!fin){
-            maPile.set(ip-nbp-1,lecteur.getLigne());
+            maPile.set(ip-nbp-1,lecteur.getCo());
             this.base = ip-nbp-2;
             lecteur.go(a);
         }
@@ -266,20 +266,32 @@ public class MachineNilNovi {
     public void retourFonction(){
         if (!fin){
             lecteur.go(maPile.get(base+1));
-            ip= base;
+            lecteur.set(base-1,maPile.get(ip));
+            temp = base
             base = maPile.get(base);
+            while (ip > temp-1){
+                maPile.remove(ip);
+                ip--;
+            }
         }
     }
 
     public void retourProc(){
         if (!fin){
-
+            lecteur.go(maPile.get(base+1));
+            temp = base
+            base = maPile.get(base);
+            while (ip > temp-2){
+                maPile.remove(ip);
+                ip--;
+            }
         }
     }
 
     public void empilerParam(int ad){
         if (!fin){
-
+            ip++;
+            maPile.set(ip,maPile.get(base+2+ad))
         }
     }
     public void parse(String s){

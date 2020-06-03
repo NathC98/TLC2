@@ -9,6 +9,10 @@ public class Lecteur {
         this.ligne = 1;
     }
 
+    public int getCo(){
+        return co;
+    }
+
     public String getLigne (){
         return "";
     }
