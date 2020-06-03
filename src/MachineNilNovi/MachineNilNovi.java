@@ -227,13 +227,13 @@ public class MachineNilNovi {
 
     public void tra(int ad){
         if (!fin){
-            ip = ad;
+            lecteur.go(ad);
         }
     }
 
     public void tze(int ad){
         if (!fin){
-            if (maPile.get(ip) == 0) ip = ad;
+            if (maPile.get(ip) == 0)  lecteur.go(ad);
         }
     }
 
