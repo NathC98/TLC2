@@ -18,7 +18,7 @@ public class MachineNilNovi {
         maPile.add(0);
         this.fin = false;
         this.ip = 1;
-        this.base = 0
+        this.base = 0;
     }
 
     public void finProg(){
