@@ -26,13 +26,18 @@ public class MachineNilNovi {
 
     public void reserver(int n){
         if (!fin){
-            if (n >= 0) ip = n-1;
+            if (n >= 0) {
+                for (int i = 0; i < n - 1; i++){
+                    maPile.add(0)
+                }
+                ip = n-1;
+            }
         }
     }
 
     public void empiler(int val){
         if (!fin){
-            maPile.add(ip, val);
+            maPile.set(ip, val);
             ip++;
         }
     }
@@ -60,7 +65,6 @@ public class MachineNilNovi {
             maPile.set(maPile.get(ip),entrer);
             maPile.remove(ip);
             ip = ip - 1;
-
         }
     }
 
@@ -233,23 +237,33 @@ public class MachineNilNovi {
     }
 
     public void reserverBloc(){
+        if (!fin){
 
+        }
     }
 
     public void traStat(int a, int nbp){
+        if (!fin){
 
+        }
     }
 
     public void retourFonction(){
+        if (!fin){
 
+        }
     }
 
     public void retourProc(){
+        if (!fin){
 
+        }
     }
 
     public void empilerParam(int ad){
+        if (!fin){
 
+        }
     }
     public void parse(String s){
 
