@@ -253,7 +253,7 @@ public class MachineNilNovi {
     public void reserverBloc(){
         if (!fin){
             ip++;
-            maPile.set(ip,base);
+            maPile.add(ip,base);
             ip++;
         }
     }
