@@ -9,7 +9,7 @@ public class Lecteur {
     private int co;
     private ArrayList<String> file;
 
-    public Lecteur(String fichier){
+    public Lecteur(String fichier) throws IOException {
         this.fichier = fichier;
         this.co = 1;
         BufferedReader lecteurAvecBuffer = null;
@@ -27,16 +27,18 @@ public class Lecteur {
             file.add(ligne);
         lecteurAvecBuffer.close();
     }
-    }
+
 
     public int getCo(){
         return co;
     }
 
-    public String readLigne(int l) {
-        String s = getLigne(l);
-
+    public String readLigne() {
+        String s = getLigne();
+        return s;
     }
+
+
     public String getLigne (){
         return file.get(co-1);
     }
@@ -47,5 +49,10 @@ public class Lecteur {
 
     public void go(int ligne){
         this.co = co;
+    }
+
+    public static void main(String[] args) throws IOException {
+        Lecteur lecteur = new Lecteur("./text1.txt");
+        System.out.println(lecteur.getLigne());
     }
 }
