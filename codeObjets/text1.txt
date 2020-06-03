@@ -1,0 +1,3 @@
+get();
+empiler(1);
+empiler(30);
