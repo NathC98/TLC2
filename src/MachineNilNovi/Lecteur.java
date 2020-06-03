@@ -52,7 +52,7 @@ public class Lecteur {
     }
 
     public static void main(String[] args) throws IOException {
-        Lecteur lecteur = new Lecteur("./text1.txt");
+        Lecteur lecteur = new Lecteur("./text1");
         System.out.println(lecteur.getLigne());
     }
 }

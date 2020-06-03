@@ -19,10 +19,12 @@ public class MachineNilNovi {
         this.fin = false;
         this.ip = 1;
         this.base = 0;
+        co++;
     }
 
     public void finProg(){
         this.fin = true;
+        co++;
     }
 
     public void reserver(int n){
@@ -34,6 +36,7 @@ public class MachineNilNovi {
                 ip = ip + n - 1;
             }
         }
+        co++;
     }
 
     public void empiler(int val){
@@ -41,6 +44,7 @@ public class MachineNilNovi {
             maPile.add(val);
             ip++;
         }
+        co++;
     }
 
     public void affectation (){
@@ -52,6 +56,7 @@ public class MachineNilNovi {
             maPile.remove(ip - 1);
             ip = ip - 2;
         }
+        co++;
     }
 
     public void valeurPile(){
@@ -59,6 +64,7 @@ public class MachineNilNovi {
             int val = maPile.get(maPile.get(ip));
             maPile.set(ip,val);
         }
+        co++;
     }
 
     public void get(){
@@ -71,6 +77,7 @@ public class MachineNilNovi {
             ip = ip - 1;
 
         }
+        co++;
     }
 
     public void put(){
@@ -79,12 +86,14 @@ public class MachineNilNovi {
             maPile.remove(ip);
             ip--;
         }
+        co++;
     }
 
     public void moins(){
         if (!fin){
             maPile.set(ip, -maPile.get(ip));
         }
+        co++;
     }
 
     public void sous(){
@@ -94,6 +103,7 @@ public class MachineNilNovi {
             ip --;
             maPile.set(ip, maPile.get(ip) - i);
         }
+        co++;
     }
 
     public void add(){
@@ -103,6 +113,7 @@ public class MachineNilNovi {
             ip --;
             maPile.set(ip, maPile.get(ip) + i);
         }
+        co++;
     }
 
     public void mult(){
@@ -112,6 +123,7 @@ public class MachineNilNovi {
             ip --;
             maPile.set(ip, maPile.get(ip) * i);
         }
+        co++;
     }
 
     public void div(){
@@ -121,6 +133,7 @@ public class MachineNilNovi {
             ip --;
             maPile.set(ip, maPile.get(ip) / i);
         }
+        co++;
     }
 
     public void equal(){
@@ -132,6 +145,7 @@ public class MachineNilNovi {
             else maPile.add(0);
             ip++;
         }
+        co++;
     }
 
     public void diff(){
@@ -143,6 +157,7 @@ public class MachineNilNovi {
             else maPile.add(0);
             ip++;
         }
+        co++;
     }
 
     public void inf(){
@@ -154,6 +169,7 @@ public class MachineNilNovi {
             else maPile.add(0);
             ip++;
         }
+        co++;
     }
 
     public void infeg(){
@@ -165,6 +181,7 @@ public class MachineNilNovi {
             else maPile.add(0);
             ip++;
         }
+        co++;
     }
 
     public void sup(){
@@ -176,6 +193,7 @@ public class MachineNilNovi {
             else maPile.add(0);
             ip++;
         }
+        co++;
     }
 
     public void supeg(){
@@ -187,6 +205,7 @@ public class MachineNilNovi {
             else maPile.add(0);
             ip++;
         }
+        co++;
     }
 
     public void et(){
@@ -201,6 +220,7 @@ public class MachineNilNovi {
                 ip++;
             }
         }
+        co++;
     }
 
     public void ou(){
@@ -215,6 +235,7 @@ public class MachineNilNovi {
                 ip++;
             }
         }
+        co++;
     }
 
     public void non(){
@@ -223,6 +244,7 @@ public class MachineNilNovi {
             if (i == 0)maPile.set(ip, 1);
             if (i == 1)maPile.set(ip, 0);
         }
+        co++;
     }
 
     public void tra(int ad){
@@ -240,6 +262,7 @@ public class MachineNilNovi {
     public void erreur(String s){
         if (!fin){
             System.out.println(s);
+            fin = true;
         }
     }
 
@@ -248,6 +271,7 @@ public class MachineNilNovi {
             ip++;
             maPile.set(ip, base + ad + 2);
         }
+        co++;
     }
 
     public void reserverBloc(){
@@ -257,6 +281,7 @@ public class MachineNilNovi {
             ip++;
             maPile.add(0);
         }
+        co++;
     }
 
     public void traStat(int a, int nbp){
@@ -297,6 +322,7 @@ public class MachineNilNovi {
             ip++;
             maPile.set(ip, maPile.get(base + 2 + ad));
         }
+        co++;
     }
 
     public void parse(String s){
