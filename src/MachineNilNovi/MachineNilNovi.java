@@ -65,12 +65,15 @@ public class MachineNilNovi {
             maPile.set(maPile.get(ip),entrer);
             maPile.remove(ip);
             ip = ip - 1;
+
         }
     }
 
     public void put(){
         if (!fin){
             System.out.println(maPile.get(ip));
+            maPile.remove(ip);
+            ip--;
         }
     }
 
@@ -236,21 +239,34 @@ public class MachineNilNovi {
         }
     }
 
+    public void empilerad(int ad){
+        if (!fin){
+            ip++;
+            maPile.set(ip,base+ad+2);
+        }
+    }
+
     public void reserverBloc(){
         if (!fin){
-
+            ip++;
+            maPile.set(ip,base);
+            ip++;
         }
     }
 
     public void traStat(int a, int nbp){
         if (!fin){
-
+            maPile.set(ip-nbp-1,lecteur.getLigne());
+            this.base = ip-nbp-2;
+            lecteur.go(a);
         }
     }
 
     public void retourFonction(){
         if (!fin){
-
+            lecteur.go(maPile.get(base+1));
+            ip= base;
+            base = maPile.get(base);
         }
     }
 

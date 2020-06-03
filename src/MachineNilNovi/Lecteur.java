@@ -2,7 +2,7 @@ package MachineNilNovi;
 
 public class Lecteur {
     private String fichier;
-    private int ligne;
+    private int co;
 
     public Lecteur(String fichier){
         this.fichier = fichier;
