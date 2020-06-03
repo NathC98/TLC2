@@ -255,6 +255,7 @@ public class MachineNilNovi {
             ip++;
             maPile.add(ip, base);
             ip++;
+            maPile.add(0);
         }
     }
 
