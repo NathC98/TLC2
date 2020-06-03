@@ -246,22 +246,22 @@ public class MachineNilNovi {
     public void empilerad(int ad){
         if (!fin){
             ip++;
-            maPile.set(ip,base+ad+2);
+            maPile.set(ip, base + ad + 2);
         }
     }
 
     public void reserverBloc(){
         if (!fin){
             ip++;
-            maPile.add(ip,base);
+            maPile.add(ip, base);
             ip++;
         }
     }
 
     public void traStat(int a, int nbp){
         if (!fin){
-            maPile.set(ip-nbp-1,lecteur.getCo());
-            this.base = ip-nbp-2;
+            maPile.set(ip - nbp - 1, lecteur.getCo());
+            this.base = ip - nbp - 2;
             lecteur.go(a);
         }
     }
@@ -272,7 +272,7 @@ public class MachineNilNovi {
             lecteur.set(base-1,maPile.get(ip));
             temp = base
             base = maPile.get(base);
-            while (ip > temp-1){
+            while (ip > temp - 1){
                 maPile.remove(ip);
                 ip--;
             }
@@ -281,10 +281,10 @@ public class MachineNilNovi {
 
     public void retourProc(){
         if (!fin){
-            lecteur.go(maPile.get(base+1));
+            lecteur.go(maPile.get(base + 1));
             temp = base
             base = maPile.get(base);
-            while (ip > temp-2){
+            while (ip > temp - 2){
                 maPile.remove(ip);
                 ip--;
             }
@@ -294,9 +294,10 @@ public class MachineNilNovi {
     public void empilerParam(int ad){
         if (!fin){
             ip++;
-            maPile.set(ip,maPile.get(base+2+ad))
+            maPile.set(ip, maPile.get(base + 2 + ad));
         }
     }
+
     public void parse(String s){
 
     }
