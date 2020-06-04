@@ -447,7 +447,21 @@ public class MachineNilNovi {
             this.reserverBloc();
         }
         if (nomFonct.compareTo("traStat") == 0){
-
+            int a = 0;
+            int nbp = 0;
+            int i1 = 0;
+            while(param.charAt(i1) != ','){
+                i1++;
+            }
+            String param1 = param.substring(1,i1);
+            int i2 = i1;
+            while(param.charAt(i2) != ')'){
+                i2++;
+            }
+            String param2 = param.substring(i1+1,i2);
+            a = Integer.parseInt(param1);
+            nbp = Integer.parseInt(param2);
+            this.traStat(a,nbp);
         }
         if (nomFonct.compareTo("retourFonct") == 0){
             this.retourFonct();
