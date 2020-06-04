@@ -420,7 +420,14 @@ public class MachineNilNovi {
             this.retourProc();
         }
         if (nomFonct.compareTo("empilerParam") == 0){
-
+            int ad = 0;
+            int i = 0;
+            while(param.charAt(i) != ')'){
+                i++;
+            }
+            String param1 = param.substring(1,i);
+            ad = Integer.parseInt(param1);
+            this.empilerParam(ad);
         }
     }
 
