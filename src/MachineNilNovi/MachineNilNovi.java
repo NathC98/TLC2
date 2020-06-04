@@ -408,16 +408,16 @@ public class MachineNilNovi {
             this.tze();
         }
         if (nomFonct.compareTo("reserverBloc") == 0){
-
+            this.reserverBloc();
         }
         if (nomFonct.compareTo("traStat") == 0){
 
         }
         if (nomFonct.compareTo("retourFonct") == 0){
-
+            this.retourFonct();
         }
         if (nomFonct.compareTo("retourProc") == 0){
-
+            this.retourProc();
         }
         if (nomFonct.compareTo("empilerParam") == 0){
 
