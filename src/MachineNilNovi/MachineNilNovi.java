@@ -1,4 +1,10 @@
 package MachineNilNovi;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Scanner;
 
 
 public class MachineNilNovi {
@@ -9,9 +15,15 @@ public class MachineNilNovi {
     private ArrayList<Object> TableIdentificateur;
     private boolean fin;
 
-
+    void MachineNilNovi() throws IOException {
+        ip = 0 ;
+        base = 0;
+        maPile = new ArrayList<Integer>();
+        fin = false;
+    }
     public void debutProg(){
         maPile = new ArrayList<Integer>();
+        maPile.add(0);
         maPile.add(0);
         this.fin = false;
         this.ip = 1;
@@ -495,6 +507,9 @@ public class MachineNilNovi {
         int lenFile = (lecteur.getFile()).size();
         while(lecteur.getCo() != lenFile ){
             this.parse();
+            if(lecteur.getCo() >= 2){
+                System.out.println(maPile.toString());
+            }
         }
     }
 }
