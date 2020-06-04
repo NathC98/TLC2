@@ -329,12 +329,99 @@ public class MachineNilNovi {
         String sligne = lecteur.getLigne();
         String nomFonct;
         String param;
-        int s = 0
-        while(lecteur.charAt(s) != '('){
+        int s = 0;
+        while(sligne.charAt(s) != '('){
             s++;
         }
-        nomFonct = lecteur.substring(0,s);
-        param = lecteur.substring(s)
+        nomFonct =sligne.substring(0,s);
+        param = sligne.substring(s);
+        if (nomFonct.compareTo("debutProg") == 0){
+
+        }
+        if (nomFonct.compareTo("finProg") == 0){
+
+        }
+        if (nomFonct.compareTo("reserver") == 0){
+
+        }
+        if (nomFonct.compareTo("empiler") == 0){
+
+        }
+        if (nomFonct.compareTo("empilerAd") == 0){
+
+        }
+        if (nomFonct.compareTo("affectation") == 0){
+
+        }
+        if (nomFonct.compareTo("valeurPile") == 0){
+
+        }
+        if (nomFonct.compareTo("get") == 0){
+
+        }
+        if (nomFonct.compareTo("put") == 0){
+
+        }
+        if (nomFonct.compareTo("moins") == 0){
+
+        }
+        if (nomFonct.compareTo("sous") == 0){
+
+        }
+        if (nomFonct.compareTo("add") == 0){
+
+        }
+        if (nomFonct.compareTo("mult") == 0){
+
+        }
+        if (nomFonct.compareTo("div") == 0){
+
+        }
+        if (nomFonct.compareTo("diff") == 0){
+
+        }
+        if (nomFonct.compareTo("inf") == 0){
+
+        }
+        if (nomFonct.compareTo("infeg") == 0){
+
+        }
+        if (nomFonct.compareTo("sup") == 0){
+
+        }
+        if (nomFonct.compareTo("supeg") == 0){
+
+        }
+        if (nomFonct.compareTo("et") == 0){
+
+        }
+        if (nomFonct.compareTo("ou") == 0){
+
+        }
+        if (nomFonct.compareTo("non") == 0){
+
+        }
+        if (nomFonct.compareTo("tra") == 0){
+
+        }
+        if (nomFonct.compareTo("tze") == 0){
+
+        }
+        if (nomFonct.compareTo("reserverBloc") == 0){
+
+        }
+        if (nomFonct.compareTo("traStat") == 0){
+
+        }
+        if (nomFonct.compareTo("retourFonct") == 0){
+
+        }
+        if (nomFonct.compareTo("retourProc") == 0){
+
+        }
+        if (nomFonct.compareTo("empilerParam") == 0){
+
+        }
     }
 
     public int getIp() {
