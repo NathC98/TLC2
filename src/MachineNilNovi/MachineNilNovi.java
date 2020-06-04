@@ -336,76 +336,76 @@ public class MachineNilNovi {
         nomFonct =sligne.substring(0,s);
         param = sligne.substring(s);
         if (nomFonct.compareTo("debutProg") == 0){
-
+            this.debutProg();
         }
         if (nomFonct.compareTo("finProg") == 0){
-
+            this.finProg();
         }
         if (nomFonct.compareTo("reserver") == 0){
-
+            this.reserver();
         }
         if (nomFonct.compareTo("empiler") == 0){
-
+            this.empiler();
         }
         if (nomFonct.compareTo("empilerAd") == 0){
-
+            this.empilerad();
         }
         if (nomFonct.compareTo("affectation") == 0){
-
+            this.affectation();
         }
         if (nomFonct.compareTo("valeurPile") == 0){
-
+            this.valeurPile();
         }
         if (nomFonct.compareTo("get") == 0){
-
+            this.get();
         }
         if (nomFonct.compareTo("put") == 0){
-
+            this.put();
         }
         if (nomFonct.compareTo("moins") == 0){
-
+            this.moins();
         }
         if (nomFonct.compareTo("sous") == 0){
-
+            this.sous();
         }
         if (nomFonct.compareTo("add") == 0){
-
+            this.add();
         }
         if (nomFonct.compareTo("mult") == 0){
-
+            this.mult();
         }
         if (nomFonct.compareTo("div") == 0){
-
+            this.div();
         }
         if (nomFonct.compareTo("diff") == 0){
-
+            this.diff();
         }
         if (nomFonct.compareTo("inf") == 0){
-
+            this.inf();
         }
         if (nomFonct.compareTo("infeg") == 0){
-
+            this.infeg();
         }
         if (nomFonct.compareTo("sup") == 0){
-
+            this.sup();
         }
         if (nomFonct.compareTo("supeg") == 0){
-
+            this.supeg();
         }
         if (nomFonct.compareTo("et") == 0){
-
+            this.et();
         }
         if (nomFonct.compareTo("ou") == 0){
-
+            this.ou();
         }
         if (nomFonct.compareTo("non") == 0){
-
+            this.non();
         }
         if (nomFonct.compareTo("tra") == 0){
-
+            this.tra();
         }
         if (nomFonct.compareTo("tze") == 0){
-
+            this.tze();
         }
         if (nomFonct.compareTo("reserverBloc") == 0){
 
