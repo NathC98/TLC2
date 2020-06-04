@@ -45,6 +45,10 @@ public class Lecteur {
         return file.get(co-1);
     }
 
+    public ArrayList<String> getFile(){
+        return file;
+    }
+
     public void next(){
         co = co + 1;
     }

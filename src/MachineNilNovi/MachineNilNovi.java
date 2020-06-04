@@ -8,10 +8,6 @@ public class MachineNilNovi {
     private ArrayList<Object> TableIdentificateur;
     private boolean fin;
 
-    public MachineNilNovi(ArrayList<Object> ids, String fichier){
-        this.TableIdentificateur = ids;
-        this.lecteur = new Lecteur(fichier);
-    }
 
     public void debutProg(){
         maPile = new ArrayList<Integer>();
@@ -491,5 +487,13 @@ public class MachineNilNovi {
 
     public ArrayList<Integer> getMaPile() {
         return maPile;
+    }
+
+    public void compilation(String fichier){
+        this.lecteur = new Lecteur(fichier);
+        int lenFile = (lecteur.getFile()).length();
+        while(lecteur.getCo() != lenFile ){
+            this.parse();
+        }
     }
 }
