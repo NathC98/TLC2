@@ -315,8 +315,8 @@ public class MachineNilNovi {
 
     public void empilerParam(int ad){
         if (!fin){
+            maPile.add(maPile.get(base + 2 + ad));
             ip++;
-            maPile.add(ip, maPile.get(base + 2 + ad));
         }
         co++;
     }
