@@ -15,12 +15,12 @@ public class MachineNilNovi {
         this.fin = false;
         this.ip = 1;
         this.base = 0;
-        co++;
+        this.lecteur.next();
     }
 
     public void finProg(){
         this.fin = true;
-        co++;
+        this.lecteur.next();
     }
 
     public void reserver(int n){
@@ -32,7 +32,7 @@ public class MachineNilNovi {
                 ip = ip + n - 1;
             }
         }
-        co++;
+        this.lecteur.next();
     }
 
     public void empiler(int val){
@@ -40,7 +40,7 @@ public class MachineNilNovi {
             maPile.add(val);
             ip++;
         }
-        co++;
+        this.lecteur.next();
     }
 
     public void affectation (){
@@ -52,7 +52,7 @@ public class MachineNilNovi {
             maPile.remove(ip - 1);
             ip = ip - 2;
         }
-        co++;
+        this.lecteur.next();
     }
 
     public void valeurPile(){
@@ -60,7 +60,7 @@ public class MachineNilNovi {
             int val = maPile.get(maPile.get(ip));
             maPile.set(ip,val);
         }
-        co++;
+        this.lecteur.next();
     }
 
     public void get(){
@@ -73,7 +73,7 @@ public class MachineNilNovi {
             ip = ip - 1;
 
         }
-        co++;
+        this.lecteur.next();
     }
 
     public void put(){
@@ -82,14 +82,14 @@ public class MachineNilNovi {
             maPile.remove(ip);
             ip--;
         }
-        co++;
+        this.lecteur.next();
     }
 
     public void moins(){
         if (!fin){
             maPile.set(ip, -maPile.get(ip));
         }
-        co++;
+        this.lecteur.next();
     }
 
     public void sous(){
@@ -99,7 +99,7 @@ public class MachineNilNovi {
             ip --;
             maPile.set(ip, maPile.get(ip) - i);
         }
-        co++;
+        this.lecteur.next();
     }
 
     public void add(){
@@ -109,7 +109,7 @@ public class MachineNilNovi {
             ip --;
             maPile.set(ip, maPile.get(ip) + i);
         }
-        co++;
+        this.lecteur.next();
     }
 
     public void mult(){
@@ -119,7 +119,7 @@ public class MachineNilNovi {
             ip --;
             maPile.set(ip, maPile.get(ip) * i);
         }
-        co++;
+        this.lecteur.next();
     }
 
     public void div(){
@@ -129,7 +129,7 @@ public class MachineNilNovi {
             ip --;
             maPile.set(ip, maPile.get(ip) / i);
         }
-        co++;
+        this.lecteur.next();
     }
 
     public void equal(){
@@ -141,7 +141,7 @@ public class MachineNilNovi {
             else maPile.add(0);
             ip++;
         }
-        co++;
+        this.lecteur.next();
     }
 
     public void diff(){
@@ -153,7 +153,7 @@ public class MachineNilNovi {
             else maPile.add(0);
             ip++;
         }
-        co++;
+        this.lecteur.next();
     }
 
     public void inf(){
@@ -165,7 +165,7 @@ public class MachineNilNovi {
             else maPile.add(0);
             ip++;
         }
-        co++;
+        this.lecteur.next();
     }
 
     public void infeg(){
@@ -177,7 +177,7 @@ public class MachineNilNovi {
             else maPile.add(0);
             ip++;
         }
-        co++;
+        this.lecteur.next();
     }
 
     public void sup(){
@@ -189,7 +189,7 @@ public class MachineNilNovi {
             else maPile.add(0);
             ip++;
         }
-        co++;
+        this.lecteur.next();
     }
 
     public void supeg(){
@@ -201,7 +201,7 @@ public class MachineNilNovi {
             else maPile.add(0);
             ip++;
         }
-        co++;
+        this.lecteur.next();
     }
 
     public void et(){
@@ -216,7 +216,7 @@ public class MachineNilNovi {
                 ip++;
             }
         }
-        co++;
+        this.lecteur.next();
     }
 
     public void ou(){
@@ -231,7 +231,7 @@ public class MachineNilNovi {
                 ip++;
             }
         }
-        co++;
+        this.lecteur.next();
     }
 
     public void non(){
@@ -240,7 +240,7 @@ public class MachineNilNovi {
             if (i == 0)maPile.set(ip, 1);
             if (i == 1)maPile.set(ip, 0);
         }
-        co++;
+        this.lecteur.next();
     }
 
     public void tra(int ad){
@@ -267,7 +267,7 @@ public class MachineNilNovi {
             ip++;
             maPile.add(ip, base + ad + 2);
         }
-        co++;
+        this.lecteur.next();
     }
 
     public void reserverBloc(){
@@ -277,7 +277,7 @@ public class MachineNilNovi {
             ip++;
             maPile.add(0);
         }
-        co++;
+        this.lecteur.next();
     }
 
     public void traStat(int a, int nbp){
@@ -318,7 +318,7 @@ public class MachineNilNovi {
             maPile.add(maPile.get(base + 2 + ad));
             ip++;
         }
-        co++;
+        this.lecteur.next();
     }
 
     public void parse(String s){
