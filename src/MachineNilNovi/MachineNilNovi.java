@@ -1,5 +1,6 @@
 package MachineNilNovi;
 
+
 public class MachineNilNovi {
     private Lecteur lecteur;
     private int ip;
@@ -288,11 +289,11 @@ public class MachineNilNovi {
         }
     }
 
-    public void retourFonction(){
+    public void retourFonct(){
         if (!fin){
             lecteur.go(maPile.get(base+1));
-            lecteur.set(base-1,maPile.get(ip));
-            temp = base
+            maPile.set(base-1,maPile.get(ip));
+            int temp = base;
             base = maPile.get(base);
             while (ip > temp - 1){
                 maPile.remove(ip);
@@ -304,7 +305,7 @@ public class MachineNilNovi {
     public void retourProc(){
         if (!fin){
             lecteur.go(maPile.get(base + 1));
-            temp = base
+            int temp = base;
             base = maPile.get(base);
             while (ip > temp - 2){
                 maPile.remove(ip);
@@ -321,7 +322,7 @@ public class MachineNilNovi {
         this.lecteur.next();
     }
 
-    public void parse(String s){
+    public void parse(){
         String sligne = lecteur.getLigne();
         String nomFonct;
         String param;
@@ -489,9 +490,9 @@ public class MachineNilNovi {
         return maPile;
     }
 
-    public void compilation(String fichier){
+    public void compilation(String fichier) throws IOException {
         this.lecteur = new Lecteur(fichier);
-        int lenFile = (lecteur.getFile()).length();
+        int lenFile = (lecteur.getFile()).size();
         while(lecteur.getCo() != lenFile ){
             this.parse();
         }
