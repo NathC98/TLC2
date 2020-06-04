@@ -335,6 +335,7 @@ public class MachineNilNovi {
         }
         nomFonct =sligne.substring(0,s);
         param = sligne.substring(s);
+
         if (nomFonct.compareTo("debutProg") == 0){
             this.debutProg();
         }
@@ -342,13 +343,34 @@ public class MachineNilNovi {
             this.finProg();
         }
         if (nomFonct.compareTo("reserver") == 0){
-            this.reserver();
+            int ad = 0;
+            int i = 0;
+            while(param.charAt(i) != ')'){
+                i++;
+            }
+            String param1 = param.substring(1,i);
+            ad = Integer.parseInt(param1);
+            this.reserver(ad);
         }
         if (nomFonct.compareTo("empiler") == 0){
-            this.empiler();
+            int ad = 0;
+            int i = 0;
+            while(param.charAt(i) != ')'){
+                i++;
+            }
+            String param1 = param.substring(1,i);
+            ad = Integer.parseInt(param1);
+            this.empiler(ad);
         }
         if (nomFonct.compareTo("empilerAd") == 0){
-            this.empilerad();
+            int ad = 0;
+            int i = 0;
+            while(param.charAt(i) != ')'){
+                i++;
+            }
+            String param1 = param.substring(1,i);
+            ad = Integer.parseInt(param1);
+            this.empilerad(ad);
         }
         if (nomFonct.compareTo("affectation") == 0){
             this.affectation();
@@ -402,10 +424,24 @@ public class MachineNilNovi {
             this.non();
         }
         if (nomFonct.compareTo("tra") == 0){
-            this.tra();
+            int ad = 0;
+            int i = 0;
+            while(param.charAt(i) != ')'){
+                i++;
+            }
+            String param1 = param.substring(1,i);
+            ad = Integer.parseInt(param1);
+            this.tra(ad);
         }
         if (nomFonct.compareTo("tze") == 0){
-            this.tze();
+            int ad = 0;
+            int i = 0;
+            while(param.charAt(i) != ')'){
+                i++;
+            }
+            String param1 = param.substring(1,i);
+            ad = Integer.parseInt(param1);
+            this.tze(ad);
         }
         if (nomFonct.compareTo("reserverBloc") == 0){
             this.reserverBloc();
