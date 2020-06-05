@@ -66,7 +66,7 @@ class DicoLocal:
 
 	# Fonction pour trouver une entrée dans la classe des identificateurs
 	def trouver(self,identif):
-		if (identif in self.value):
+		if (identif in self.dict):
 			x = self.dict[identif]
 			typ = x[0]
 			if (typ == "function" or typ == "procedure"):
@@ -81,7 +81,7 @@ class DicoLocal:
 			print("Erreur : l'élément n'est pas dans la table des identificateurs")
 
 	def adresse(self,ident):
-		if (ident in self.value):
+		if (ident in self.dict):
 			ad = self.dict[ident]
 			return ad[1]
 		elif(ident in identifierTableGlobale):
