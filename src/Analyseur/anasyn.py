@@ -22,7 +22,8 @@ adProgram = 0
 traProg = 0
 argcount = 0
 currentOp = 0
-#identparameter
+rangeVar = ""
+
 
 class AnaSynException(Exception):
 	def __init__(self, value):
@@ -248,16 +249,13 @@ def instr(lexical_analyser):
 		if lexical_analyser.isSymbol(":="):				
 			# affectation
 
-
-			codeGenerator.append(str(ligne) + " empilerAd("+str(adresse)+");\n")
-			incrementeLigne()
-			#codeGenerator.append(str(ligne) + " empilerAd(" + str(adressePile) + ");\n")
-			#incrementeLigne()
-			#incrementeAdresse()
-
 			lexical_analyser.acceptSymbol(":=")
 			if parametreOut(ident):
-				#
+				#empilerparam
+			elif rangeVar == "local":
+				#empilerAd
+			else :
+				#empiler
 			expression(lexical_analyser)
 			logger.debug("parsed affectation")
 
@@ -472,7 +470,7 @@ def elemPrim(lexical_analyser):
 			lexical_analyser.acceptCharacter("(")
 			if not lexical_analyser.isCharacter(")"):
 				listePe(lexical_analyser)
-			codeGenerator.append(str(ligne) + " traStat(ad(f),n);\n")
+			codeGenerator.append(str(ligne) + " traStat(" + str(adresse(ident)) + "," + str(argcount) + ");\n")
 			incrementeLigne()
 			lexical_analyser.acceptCharacter(")")
 
@@ -482,12 +480,16 @@ def elemPrim(lexical_analyser):
 			logger.debug("Call to function: " + ident)
 		else:
 			logger.debug("Use of an identifier as an expression: " + ident)
-			codeGenerator.append(str(ligne) + " empiler();\n")
-			incrementeLigne()
+			if rangeVar == "local":
+				if parametreOut(ident):
+					#empilerparam
+				else:
+					#empilerAd
+			else:
+				#empiler
+
 			codeGenerator.append(str(ligne) + " valeurPile();\n")
 			incrementeLigne()
-                        #empiler
-			#valeurpile
 	else:
 		logger.error("Unknown Value!")
 		raise AnaSynException("Unknown Value!")
@@ -680,6 +682,9 @@ def writeOperation():
 
 def parametreOut(ident):
 	#en cours
+
+def rangeVarrr(ident):
+	#
 
 ########################################################################				 	
 def main():
