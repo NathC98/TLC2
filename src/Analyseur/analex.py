@@ -27,6 +27,7 @@ keywords = [ \
 identifierTableGlobale = dict()
 
 # Fonction pour rajouter un élément dans la table des identificateurs
+#identif : type string, nom de l'identifiant, type = type de à quoi ça réfère, addresse : entier qui est l'addresse de la ligne, complément : si tu stocke une valeur, tu la stcoke dans complément,
 def ajouterEntreeG(identif,typ,adress,complement) :
     tab = (typ,adress,complement)
     d = {identif : tab}
