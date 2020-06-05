@@ -62,12 +62,12 @@ class DicoLocal:
 	def ajouter(self,identif, typ, adress, complement):
 		tab = (typ, adress, complement)
 		d = {identif: tab}
-		self.update(d)
+		self.value.update(d)
 
 	# Fonction pour trouver une entrée dans la classe des identificateurs
 	def trouver(self,identif):
-		if (identif in self):
-			x = self[identif]
+		if (identif in self.value):
+			x = self.value[identif]
 			typ = x[0]
 			if (typ == "function" or typ == "procedure"):
 				return x[1]
@@ -81,22 +81,17 @@ class DicoLocal:
 			print("Erreur : l'élément n'est pas dans la table des identificateurs")
 
 	def adresse(self,ident):
-		if (ident in self):
-			ad = self[ident]
+		if (ident in self.value):
+			ad = self.value[ident]
 			return ad[1]
 		elif(ident in identifierTableGlobale):
 			return adresse(ident)
 
 	def rangeIdent(self,ident) :
-		if (identif in self):
+		if (identif in self.value):
 			return "local"
 		else:
 			return "global"
-
-
-
-
-
 
 class AnaLexException(Exception):
 	def __init__(self, value):
