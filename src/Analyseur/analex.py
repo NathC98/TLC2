@@ -36,7 +36,7 @@ def ajouterEntreeG(identif,typ,adress,complement) :
 
 #Fonction pour trouver une entrée dans la classe des identificateurs
 def trouverEntreeG(identif):
-	if (identif in identifierTable):
+	if (identif in identifierTableGlobale):
 		x = identifierTableGlobale[identif]
 		typ = x[0]
 		if (typ == "function" or typ == "procedure"):
@@ -53,6 +53,44 @@ def adresse(ident) :
 	if (ident in identifierTable) :
 		ad = identifierTableGlobale[identif]
 		return ad[1]
+
+class DicoLocal:
+
+	def init (self):
+		self.value=dict()
+
+	def ajouter(identif, typ, adress, complement):
+		tab = (typ, adress, complement)
+		d = {identif: tab}
+		self.update(d)
+
+	# Fonction pour trouver une entrée dans la classe des identificateurs
+	def trouver(identif):
+		if (identif in self):
+			x = self[identif]
+			typ = x[0]
+			if (typ == "function" or typ == "procedure"):
+				return x[1]
+			elif (typ == "out"):
+				return True
+			else:
+				return x[2]
+		elif(identif in identifierTableGlobale):
+			return trouverEntreeG(identif)
+		else:
+			print("Erreur : l'élément n'est pas dans la table des identificateurs")
+
+	def adresse(ident):
+		if (ident in self):
+			ad = self[identif]
+			return ad[1]
+		elif(ident in identifierTableGlobale):
+			return adresse(ident)
+
+
+
+
+
 
 
 class AnaLexException(Exception):
