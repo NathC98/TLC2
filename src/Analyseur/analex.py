@@ -24,6 +24,29 @@ keywords = [ \
 	]
 
 
+identifierTableGlobale = dict()
+
+# Fonction pour rajouter un élément dans la table des identificateurs
+def ajouterEntreeG(identif,typ,adress,complement) :
+    tab = (typ,adress,complement)
+    d = {identif : tab}
+    identifierTableGlobale.update(d)
+
+#Fonction pour trouver une entrée dans la classe des identificateurs
+def trouverEntreeG(identif) :
+
+    if(identif in identifierTable) :
+        x = identifierTableGlobale[identif]
+        typ = x[0]
+        if(typ == "function" or typ == "procedure"):
+            return x[1]
+        else :
+            return x[2]
+    else :
+        print("Erreur : l'élément n'est pas dans la table des identificateurs")
+
+
+
 class AnaLexException(Exception):
 	def __init__(self, value):
 		self.value = value
