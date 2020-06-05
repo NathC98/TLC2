@@ -57,8 +57,4 @@ public class Lecteur {
         this.co = co;
     }
 
-    public static void main(String[] args) throws IOException {
-        MachineNilNovi m = new MachineNilNovi();
-        m.compilation("codeObjets\\text1.txt");
-    }
 }
