@@ -50,8 +50,8 @@ def trouverEntreeG(identif):
 
 
 def adresse(ident) :
-	if (ident in identifierTable) :
-		ad = identifierTableGlobale[identif]
+	if (ident in identifierTableGlobale) :
+		ad = identifierTableGlobale[ident]
 		return ad[1]
 
 class DicoLocal:
@@ -82,7 +82,7 @@ class DicoLocal:
 
 	def adresse(ident):
 		if (ident in self):
-			ad = self[identif]
+			ad = self[ident]
 			return ad[1]
 		elif(ident in identifierTableGlobale):
 			return adresse(ident)
