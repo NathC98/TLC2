@@ -87,6 +87,11 @@ class DicoLocal:
 		elif(ident in identifierTableGlobale):
 			return adresse(ident)
 
+	def rangeIdent(ident) :
+		if (identif in self):
+			return "local"
+		else:
+			return "global"
 
 
 

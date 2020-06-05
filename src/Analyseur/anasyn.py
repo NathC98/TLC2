@@ -106,9 +106,13 @@ def declaOp(lexical_analyser):
 def procedure(lexical_analyser):
 	lexical_analyser.acceptKeyword("procedure")
 	ident = lexical_analyser.acceptIdentifier()
+	
 	logger.debug("Name of procedure : "+ident)
 	analex.ajouterEntreeG(ident,"procedure",adresse,"")
 	incrementeAdresse()
+	global currentOp
+	currentOp = 1
+	dicoP = analex.dicoLocal
 	partieFormelle(lexical_analyser)
 
 	lexical_analyser.acceptKeyword("is")
@@ -124,6 +128,9 @@ def fonction(lexical_analyser):
 	logger.debug("Name of function : "+ident)
 	analex.ajouterEntreeG(ident,"function",adresse,"")
 	incrementeAdresse()
+	global currentOp
+	currentOp = 1
+	dicoP = analex.dicoLocal
 	partieFormelle(lexical_analyser)
 
 	lexical_analyser.acceptKeyword("return")
@@ -221,6 +228,8 @@ def listeIdent(lexical_analyser):
 	if currentOp == 0:
 		analex.ajouterEntreeG(ident,"identifier",adresse,"")
 		incrementeAdresse()
+	else:
+		analex
 	if lexical_analyser.isCharacter(","):
 		lexical_analyser.acceptCharacter(",")
 		listeIdent(lexical_analyser)
@@ -246,15 +255,23 @@ def instr(lexical_analyser):
 		retour(lexical_analyser)
 	elif lexical_analyser.isIdentifier():
 		ident = lexical_analyser.acceptIdentifier()
+		global rangeVar
+		rangeVar = analex.rangeIdent(ident)
 		if lexical_analyser.isSymbol(":="):				
 			# affectation
 
 			lexical_analyser.acceptSymbol(":=")
 			if parametreOut(ident):
 				#empilerparam
+				codeGenerator.append(str(ligne) + " empilerParam(" + str(adresse(ident))+ ";\n")
+				incrementeLigne()
 			elif rangeVar == "local":
 				#empilerAd
+				codeGenerator.append(str(ligne) + " empilerAd(" + str(adresse(ident))+ ";\n")
+				incrementeLigne()
 			else :
+				codeGenerator.append(str(ligne) + " empiler(" + str(adresse(ident))+ ";\n")
+				incrementeLigne()
 				#empiler
 			expression(lexical_analyser)
 			logger.debug("parsed affectation")
@@ -464,13 +481,15 @@ def elemPrim(lexical_analyser):
 
 	elif lexical_analyser.isIdentifier():
 		ident = lexical_analyser.acceptIdentifier()
+		global rangeVar
+		rangeVar = analex.rangeIdent(ident)
 		if lexical_analyser.isCharacter("("):
 			codeGenerator.append(str(ligne) + " reserverBloc();\n")
 			incrementeLigne()			# Appel fonct
 			lexical_analyser.acceptCharacter("(")
 			if not lexical_analyser.isCharacter(")"):
 				listePe(lexical_analyser)
-			codeGenerator.append(str(ligne) + " traStat(" + str(adresse(ident)) + "," + str(argcount) + ");\n")
+			codeGenerator.append(str(ligne) + " traStat(" + str(analex.adresse(ident)) + "," + str(argcount) + ");\n")
 			incrementeLigne()
 			lexical_analyser.acceptCharacter(")")
 
@@ -483,9 +502,15 @@ def elemPrim(lexical_analyser):
 			if rangeVar == "local":
 				if parametreOut(ident):
 					#empilerparam
+					codeGenerator.append(str(ligne) + " empilerParam(" + str(adresse(ident))+ ";\n")
+					incrementeLigne()
 				else:
 					#empilerAd
+					codeGenerator.append(str(ligne) + " empilerAd(" + str(adresse(ident))+ ";\n")
+					incrementeLigne()
 			else:
+				codeGenerator.append(str(ligne) + " empiler(" + str(adresse(ident))+ ";\n")
+				incrementeLigne()
 				#empiler
 
 			codeGenerator.append(str(ligne) + " valeurPile();\n")
@@ -681,25 +706,24 @@ def writeOperation():
 		incrementeLigne()
 
 def parametreOut(ident):
-	#en cours
+	if analex.trouver(ident):
+		return True
 
-def rangeVarrr(ident):
-	#
 
 ########################################################################				 	
 def main():
- 	
+
 	parser = argparse.ArgumentParser(description='Do the syntactical analysis of a NNP program.')
 	parser.add_argument('inputfile', type=str, nargs=1, help='name of the input source file')
 	parser.add_argument('-o', '--outputfile', dest='outputfile', action='store', \
-                default="", help='name of the output file (default: stdout)')
+		default="", help='name of the output file (default: stdout)')
 	parser.add_argument('-v', '--version', action='version', version='%(prog)s 1.0')
 	parser.add_argument('-d', '--debug', action='store_const', const=logging.DEBUG, \
-                default=logging.INFO, help='show debugging info on output')
+		default=logging.INFO, help='show debugging info on output')
 	parser.add_argument('-p', '--pseudo-code', action='store_const', const=True, default=False, \
-                help='enables output of pseudo-code instead of assembly code')
+		help='enables output of pseudo-code instead of assembly code')
 	parser.add_argument('--show-ident-table', action='store_true', \
-                help='shows the final identifiers table')
+		help='shows the final identifiers table')
 	args = parser.parse_args()
 
 	filename = args.inputfile[0]
