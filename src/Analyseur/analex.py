@@ -56,16 +56,16 @@ def adresse(ident) :
 
 class DicoLocal:
 
-	def init (self):
+	def __init__(self):
 		self.value=dict()
 
-	def ajouter(identif, typ, adress, complement):
+	def ajouter(self,identif, typ, adress, complement):
 		tab = (typ, adress, complement)
 		d = {identif: tab}
 		self.update(d)
 
 	# Fonction pour trouver une entrée dans la classe des identificateurs
-	def trouver(identif):
+	def trouver(self,identif):
 		if (identif in self):
 			x = self[identif]
 			typ = x[0]
@@ -80,14 +80,14 @@ class DicoLocal:
 		else:
 			print("Erreur : l'élément n'est pas dans la table des identificateurs")
 
-	def adresse(ident):
+	def adresse(self,ident):
 		if (ident in self):
 			ad = self[ident]
 			return ad[1]
 		elif(ident in identifierTableGlobale):
 			return adresse(ident)
 
-	def rangeIdent(ident) :
+	def rangeIdent(self,ident) :
 		if (identif in self):
 			return "local"
 		else:

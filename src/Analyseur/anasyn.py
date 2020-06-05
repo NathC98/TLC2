@@ -814,7 +814,9 @@ def main():
 	##while instrIndex < codeGenerator.get_instruction_counter():
 	##	output_file.write("%s\n" % str(codeGenerator.get_instruction_at_index(instrIndex)))
 		instrIndex += 1
-		
+
+	print(analex.identifierTableGlobale)
+
 	if outputFilename != "":
 			output_file.close() 
 
