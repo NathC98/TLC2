@@ -59,6 +59,6 @@ public class Lecteur {
 
     public static void main(String[] args) throws IOException {
         MachineNilNovi m = new MachineNilNovi();
-        m.compilation("../codeObjets/object_code.txt");
+        m.compilation("codeObjets\\text1.txt");
     }
 }
