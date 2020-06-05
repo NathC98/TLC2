@@ -88,11 +88,13 @@ class DicoLocal:
 			return adresse(ident)
 
 	def rangeIdent(self,ident) :
-		if (identif in self.value):
+		if (ident in self.value):
 			return "local"
 		else:
 			return "global"
 
+
+dicoLoc = DicoLocal()	
 class AnaLexException(Exception):
 	def __init__(self, value):
 		self.value = value
@@ -556,7 +558,6 @@ def main():
 	except:
 		print("Error: can\'t open input file!")
 		return
-		
 	outputFilename = args.outputfile
 	
 	lexical_analyser = LexicalAnalyser()

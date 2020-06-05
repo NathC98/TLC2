@@ -24,7 +24,6 @@ argcount = 0
 currentOp = 0
 rangeVar = ""
 
-
 class AnaSynException(Exception):
 	def __init__(self, value):
 		self.value = value
@@ -106,13 +105,15 @@ def declaOp(lexical_analyser):
 def procedure(lexical_analyser):
 	lexical_analyser.acceptKeyword("procedure")
 	ident = lexical_analyser.acceptIdentifier()
-	
-	logger.debug("Name of procedure : "+ident)
-	analex.ajouterEntreeG(ident,"procedure",adresse,"")
-	incrementeAdresse()
 	global currentOp
+	logger.debug("Name of procedure : "+ident)
+	if currentOp == 0:
+		analex.ajouterEntreeG(ident,"procedure",adresse,"")
+		incrementeAdresse()
+	else:
+		analex.dicoLoc.ajouter(ident,"procedure",adresse,"")
+
 	currentOp = 1
-	dicoP = analex.dicoLocal
 	partieFormelle(lexical_analyser)
 
 	lexical_analyser.acceptKeyword("is")
@@ -126,11 +127,14 @@ def fonction(lexical_analyser):
 	lexical_analyser.acceptKeyword("function")
 	ident = lexical_analyser.acceptIdentifier()
 	logger.debug("Name of function : "+ident)
-	analex.ajouterEntreeG(ident,"function",adresse,"")
-	incrementeAdresse()
 	global currentOp
+	if currentOp == 0:
+		analex.ajouterEntreeG(ident,"function",adresse,"")
+		incrementeAdresse()
+	else:
+		analex.dicoLoc.ajouter(ident,"function",adresse,"")
+
 	currentOp = 1
-	dicoP = analex.dicoLocal
 	partieFormelle(lexical_analyser)
 
 	lexical_analyser.acceptKeyword("return")
@@ -244,7 +248,7 @@ def suiteInstr(lexical_analyser):
 	if not lexical_analyser.isKeyword("end"):
 		suiteInstrNonVide(lexical_analyser)
 
-def instr(lexical_analyser):		
+def instr(lexical_analyser):	
 	if lexical_analyser.isKeyword("while"):
 		boucle(lexical_analyser)
 	elif lexical_analyser.isKeyword("if"):
@@ -256,7 +260,7 @@ def instr(lexical_analyser):
 	elif lexical_analyser.isIdentifier():
 		ident = lexical_analyser.acceptIdentifier()
 		global rangeVar
-		rangeVar = analex.rangeIdent(ident)
+		rangeVar = analex.dicoLoc.rangeIdent(ident)
 		if lexical_analyser.isSymbol(":="):				
 			# affectation
 
@@ -482,7 +486,7 @@ def elemPrim(lexical_analyser):
 	elif lexical_analyser.isIdentifier():
 		ident = lexical_analyser.acceptIdentifier()
 		global rangeVar
-		rangeVar = analex.rangeIdent(ident)
+		rangeVar = analex.dicoLoc.rangeIdent(ident)
 		if lexical_analyser.isCharacter("("):
 			codeGenerator.append(str(ligne) + " reserverBloc();\n")
 			incrementeLigne()			# Appel fonct
@@ -706,7 +710,7 @@ def writeOperation():
 		incrementeLigne()
 
 def parametreOut(ident):
-	if analex.trouver(ident):
+	if analex.dicoLoc.trouver(ident):
 		return True
 
 
