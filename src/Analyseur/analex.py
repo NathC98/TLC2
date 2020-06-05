@@ -57,17 +57,17 @@ def adresse(ident) :
 class DicoLocal:
 
 	def __init__(self):
-		self.value=dict()
+		self.dict=dict()
 
 	def ajouter(self,identif, typ, adress, complement):
 		tab = (typ, adress, complement)
 		d = {identif: tab}
-		self.value.update(d)
+		self.dict.update(d)
 
 	# Fonction pour trouver une entrée dans la classe des identificateurs
 	def trouver(self,identif):
 		if (identif in self.value):
-			x = self.value[identif]
+			x = self.dict[identif]
 			typ = x[0]
 			if (typ == "function" or typ == "procedure"):
 				return x[1]
@@ -82,13 +82,15 @@ class DicoLocal:
 
 	def adresse(self,ident):
 		if (ident in self.value):
-			ad = self.value[ident]
+			ad = self.dict[ident]
 			return ad[1]
 		elif(ident in identifierTableGlobale):
 			return adresse(ident)
+		else :
+			print("erreur !")
 
 	def rangeIdent(self,ident) :
-		if (ident in self.value):
+		if (ident in self.dict):
 			return "local"
 		else:
 			return "global"
