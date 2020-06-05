@@ -28,24 +28,31 @@ identifierTableGlobale = dict()
 
 # Fonction pour rajouter un élément dans la table des identificateurs
 #identif : type string, nom de l'identifiant, type = type de à quoi ça réfère, addresse : entier qui est l'addresse de la ligne, complément : si tu stocke une valeur, tu la stcoke dans complément,
+
 def ajouterEntreeG(identif,typ,adress,complement) :
     tab = (typ,adress,complement)
     d = {identif : tab}
     identifierTableGlobale.update(d)
 
 #Fonction pour trouver une entrée dans la classe des identificateurs
-def trouverEntreeG(identif) :
+def trouverEntreeG(identif):
+	if (identif in identifierTable):
+		x = identifierTableGlobale[identif]
+		typ = x[0]
+		if (typ == "function" or typ == "procedure"):
+			return x[1]
+		elif (typ == "out"):
+			return True
+		else:
+			return x[2]
+	else:
+		print("Erreur : l'élément n'est pas dans la table des identificateurs")
 
-    if(identif in identifierTable) :
-        x = identifierTableGlobale[identif]
-        typ = x[0]
-        if(typ == "function" or typ == "procedure"):
-            return x[1]
-        else :
-            return x[2]
-    else :
-        print("Erreur : l'élément n'est pas dans la table des identificateurs")
 
+def adresse(ident) :
+	if (ident in identifierTable) :
+		ad = identifierTableGlobale[identif]
+		return ad[1]
 
 
 class AnaLexException(Exception):
