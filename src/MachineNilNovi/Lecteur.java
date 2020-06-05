@@ -57,8 +57,8 @@ public class Lecteur {
         this.co = co;
     }
 
-/*    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException {
         MachineNilNovi m = new MachineNilNovi();
-        m.compilation("codeObjets\\object_code.txt");
-    }*/
+        m.compilation("../codeObjets/object_code.txt");
+    }
 }

@@ -112,9 +112,6 @@ def fonction(lexical_analyser):
 	lexical_analyser.acceptKeyword("is")
 	corpsFonct(lexical_analyser)
 
-	codeGenerator.append(str(ligne) + " retourFonct();\n")
-	incrementeLigne()
-
 
 def corpsProc(lexical_analyser):
 	if not lexical_analyser.isKeyword("begin"):
@@ -220,8 +217,6 @@ def instr(lexical_analyser):
 		es(lexical_analyser)
 	elif lexical_analyser.isKeyword("return"):
 		retour(lexical_analyser)
-		codeGenerator.append(str(ligne) + " retourFonct();\n")
-		incrementeLigne()
 	elif lexical_analyser.isIdentifier():
 		ident = lexical_analyser.acceptIdentifier()
 
@@ -236,6 +231,7 @@ def instr(lexical_analyser):
 			logger.debug("parsed affectation")
 
 			codeGenerator.append(str(ligne) + " affectation();\n")
+			decrementeAdresse()
 			incrementeLigne()
 
 
@@ -266,19 +262,14 @@ def instr(lexical_analyser):
 
 def listePe(lexical_analyser):
 	expression(lexical_analyser)
-	
-	codeGenerator.append(str(ligne) + " empilerAd(as(X));\n")
-	incrementeLigne()
-	codeGenerator.append(str(ligne) + " valeurPile();\n")
-	incrementeLigne()
-
-	
+		
 	if lexical_analyser.isCharacter(","):
 		lexical_analyser.acceptCharacter(",")
 		listePe(lexical_analyser)
 
 def expression(lexical_analyser):
 	logger.debug("parsing expression: " + str(lexical_analyser.get_value()))
+
 	exp1(lexical_analyser)
 	if lexical_analyser.isKeyword("or"):
 		lexical_analyser.acceptKeyword("or")
@@ -346,6 +337,12 @@ def exp3(lexical_analyser):
 	logger.debug("parsing exp3")
 	exp4(lexical_analyser)	
 	if lexical_analyser.isCharacter("+") or lexical_analyser.isCharacter("-"):
+		codeGenerator.append(str(ligne) + " EmpilerAd(" + str(adressePile) + ");\n")
+		incrementeLigne()
+		codeGenerator.append(str(ligne) + " valeurPile();\n")
+		incrementeLigne()
+		incrementeAdresse()
+
 		opAdd(lexical_analyser)
 		exp4(lexical_analyser)
 
@@ -365,14 +362,17 @@ def opAdd(lexical_analyser):
 		logger.error(msg)
 		raise AnaSynException(msg)
 
-	codeGenerator.append(str(ligne) + " add;\n")
-	incrementeLigne()
-
 def exp4(lexical_analyser):
 	logger.debug("parsing exp4")
         
 	prim(lexical_analyser)	
 	if lexical_analyser.isCharacter("*") or lexical_analyser.isCharacter("/"):
+		codeGenerator.append(str(ligne) + " EmpilerAd(" + str(adressePile) + ");\n")
+		incrementeLigne()
+		codeGenerator.append(str(ligne) + " valeurPile();\n")
+		incrementeLigne()
+		incrementeAdresse()
+
 		opMult(lexical_analyser)
 		prim(lexical_analyser)
 
@@ -396,6 +396,12 @@ def prim(lexical_analyser):
 	logger.debug("parsing prim")
         
 	if lexical_analyser.isCharacter("+") or lexical_analyser.isCharacter("-") or lexical_analyser.isKeyword("not"):
+		codeGenerator.append(str(ligne) + " EmpilerAd(" + str(adressePile) + ");\n")
+		incrementeLigne()
+		codeGenerator.append(str(ligne) + " valeurPile();\n")
+		incrementeLigne()
+		incrementeAdresse()
+
 		opUnaire(lexical_analyser)
 	elemPrim(lexical_analyser)
 
@@ -490,6 +496,10 @@ def es(lexical_analyser):
 		lexical_analyser.acceptCharacter("(")
 		ident = lexical_analyser.acceptIdentifier()
 		lexical_analyser.acceptCharacter(")")
+
+		codeGenerator.append(str(ligne) + " get(); \n")
+		incrementeLigne()
+
 		logger.debug("Call to get "+ident)
 	elif lexical_analyser.isKeyword("put"):
 		lexical_analyser.acceptKeyword("put")
@@ -548,6 +558,8 @@ def retour(lexical_analyser):
 	logger.debug("parsing return instruction")
 	lexical_analyser.acceptKeyword("return")
 	expression(lexical_analyser)
+	codeGenerator.append(str(ligne) + " retourFonct();\n")
+	incrementeLigne()
 
 ################################################################################
 
@@ -555,13 +567,19 @@ def incrementeLigne():
 	global ligne
 	ligne = ligne + 1
 
+
 def incrementeAdresse():
 	global adressePile
 	adressePile = adressePile + 1
 
+def decrementeAdresse():
+	global adressePile
+	adressePile = adressePile - 1
+
 def writeOperation():
 	if operation == "=":
 		codeGenerator.append(str(ligne) + " egal;\n")
+		decrementeAdresse()
 		incrementeLigne()
 	elif operation == "moins":
 		codeGenerator.append(str(ligne) + " moins;\n")
@@ -571,30 +589,39 @@ def writeOperation():
 		incrementeLigne()
 	elif operation == "+":
 		codeGenerator.append(str(ligne) + " add;\n")
+		decrementeAdresse()
 		incrementeLigne()
 	elif operation == "-":
 		codeGenerator.append(str(ligne) + " sous;\n")
+		decrementeAdresse()
 		incrementeLigne()
 	elif operation == "*":
 		codeGenerator.append(str(ligne) + " mult;\n")
+		decrementeAdresse()
 		incrementeLigne()
 	elif operation == "/":
 		codeGenerator.append(str(ligne) + " div;\n")
+		decrementeAdresse()
 		incrementeLigne()
 	elif operation == "/=":
 		codeGenerator.append(str(ligne) + " diff;\n")
+		decrementeAdresse()
 		incrementeLigne()
 	elif operation == "<":
 		codeGenerator.append(str(ligne) + " inf;\n")
+		decrementeAdresse()
 		incrementeLigne()
 	elif operation == "<=":
 		codeGenerator.append(str(ligne) + " infeq;\n")
+		decrementeAdresse()
 		incrementeLigne()
 	elif operation == ">":
 		codeGenerator.append(str(ligne) + " sup;\n")
+		decrementeAdresse()
 		incrementeLigne()
 	elif operation == ">=":
 		codeGenerator.append(str(ligne) + " supeq;\n")
+		decrementeAdresse()
 		incrementeLigne()
 
 ########################################################################				 	
@@ -694,7 +721,7 @@ def main():
 			output_file = sys.stdout
 
 	# Outputs the generated code to a file
-	output_file = open("object_code.txt", 'w')
+	output_file = open("../../codeObjets/object_code.txt", 'w')
 	instrIndex = 0
 	while instrIndex < len(codeGenerator):
 		output_file.write(codeGenerator[instrIndex])
