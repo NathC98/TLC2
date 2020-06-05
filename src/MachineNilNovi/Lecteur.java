@@ -54,7 +54,7 @@ public class Lecteur {
     }
 
     public void go(int ligne){
-        this.co = co;
+        this.co = ligne;
     }
 
 }
