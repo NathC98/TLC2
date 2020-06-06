@@ -157,8 +157,8 @@ def corpsProc(lexical_analyser):
 	lexical_analyser.acceptKeyword("begin")
 	suiteInstr(lexical_analyser)
 	lexical_analyser.acceptKeyword("end")
-	currentOp = 0
-	adresse = 0
+	currentOp = 0 #on retourne dans le prog principal
+	adresse = 0 #on reinitialise donc les compteurs
 	argcount = 0
 
 def corpsFonct(lexical_analyser):
@@ -170,7 +170,7 @@ def corpsFonct(lexical_analyser):
 	lexical_analyser.acceptKeyword("begin")
 	suiteInstrNonVide(lexical_analyser)
 	lexical_analyser.acceptKeyword("end")
-	currentOp = 0
+	currentOp = 0 #voir corpsFonct
 	adresse = 0
 	argcount = 0
 
@@ -183,7 +183,7 @@ def partieFormelle(lexical_analyser):
 	lexical_analyser.acceptCharacter(")")
 
 def listeSpecifFormelles(lexical_analyser):
-	incrementeArgcount()
+	incrementeArgcount()#on a un argument en plus
 	specif(lexical_analyser)
 	if not lexical_analyser.isCharacter(")"):
 		lexical_analyser.acceptCharacter(";")
@@ -243,19 +243,18 @@ def declaVar(lexical_analyser):
 def listeIdent(lexical_analyser):
 	global modeId
 	ident = lexical_analyser.acceptIdentifier()
-	incrementeArgcount()
 	logger.debug("identifier found: "+str(ident))
 	if currentOp == 0: #si l'on est dans le programme principal
 		analex.ajouterEntreeG(ident,"identifier",adresse,"in/out") #on ajoute l'identifiant a la table globale
 	else:
 		if modeId == "in out":
-			analex.ajouterEntreeG(ident,"identifier",adresse,"in/out") #on ajoute l'identifiant a la table globale
-			analex.dicoLoc.ajouter(ident,"identifier",adresse,"in/out") #on ajoute l'identifiant a la table locale
+			analex.ajouterEntreeG(ident,"identifier",adresse,"in/out") #on ajoute l'identifiant a la table globale en spécifiant le mode
+			analex.dicoLoc.ajouter(ident,"identifier",adresse,"in/out") #on ajoute l'identifiant a la table locale en spécifiant le mode
 			incrementeAdresse() #on incremente l'adresse pour la variable suivante
 			modeId = ""
 		elif modeId == "in":
-			analex.ajouterEntreeG(ident,"identifier",adresse,"in") #on ajoute l'identifiant a la table globale
-			analex.dicoLoc.ajouter(ident,"identifier",adresse,"in") #on ajoute l'identifiant a la table locale
+			analex.ajouterEntreeG(ident,"identifier",adresse,"in") #on ajoute l'identifiant a la table globale en spécifiant le mode
+			analex.dicoLoc.ajouter(ident,"identifier",adresse,"in") #on ajoute l'identifiant a la table locale en spécifiant le mode
 			incrementeAdresse() #on incremente l'adresse pour la variable suivante
 			modeId = ""
 		else: 
@@ -506,7 +505,7 @@ def elemPrim(lexical_analyser):
 			codeGenerator.append("reserverBloc();\n")
 			incrementeLigne()
 			if existIn(ident):
-				analex.modifier(ident,"in/out")
+				analex.modifier(ident,"in/out") #notre variable globale est utilisée pour la fonction en tant que in/out
 			lexical_analyser.acceptCharacter("(")
 			if not lexical_analyser.isCharacter(")"):
 				listePe(lexical_analyser)
@@ -517,7 +516,7 @@ def elemPrim(lexical_analyser):
 			logger.debug("parsed procedure call")
 			codeGenerator.append("traStat(" + str(analex.adresse(ident)) + "," + str(argcount) + ");\n")
 			incrementeLigne()
-			supprComplement()
+			supprComplement() #on sort de la fonction, on réinitialise les mode des variables globales
 			logger.debug("Call to function: " + ident)
 		else:
 			logger.debug("Use of an identifier as an expression: " + ident) #c'est un identifiant qui est utilisé comme expression

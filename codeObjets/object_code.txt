@@ -8,14 +8,15 @@ valeurPile();
 add();
 affectation();
 retourProc();
-reserver(1);
+reserver(0);
 empilerParam(0);
 empiler(5); 
 affectation();
 reserverBloc()
 empiler(2); 
 empiler(2);
-traStat(2,3);
+traStat(2,2);
 empiler(2);
+valeurPile();
 put(); 
 finProg(); 
