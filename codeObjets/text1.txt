@@ -1,3 +1,4 @@
-get();
-empiler(1);
-empiler(30);
+debuProg();
+empiler(5);
+empilerParam(0);
+finProg();

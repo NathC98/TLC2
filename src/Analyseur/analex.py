@@ -23,18 +23,28 @@ keywords = [ \
 	"integer", "boolean" \
 	]
 
-
+#Table globale des identificateurs. On l'implémente comme un dictionnaire en python pour faciliter la recherche.
+#
 identifierTableGlobale = dict()
 
 # Fonction pour rajouter un élément dans la table des identificateurs
-#identif : type string, nom de l'identifiant, type = type de à quoi ça réfère, addresse : entier qui est l'addresse de la ligne, complément : si tu stocke une valeur, tu la stcoke dans complément,
+# Paramètres :
+#				identif : type string, nom de l'identifiant,
+#				typ = type de à quoi ça réfère,
+# 				adress : entier qui est l'addresse de la ligne,
+# 				complément : si tu stocke une valeur (pour une variable par exemple), tu la stcoke dans complément,
 
 def ajouterEntreeG(identif,typ,adress,complement) :
     tab = (typ,adress,complement)
     d = {identif : tab}
     identifierTableGlobale.update(d)
 
-#Fonction pour trouver une entrée dans la classe des identificateurs
+#Fonction pour trouver un identificateur dans la table globale des identificateurs
+#Paramètres :
+#		identif : String qui est le nom de l'identificateur
+#		si le type
+#
+#
 def trouverEntreeG(identif):
 	if (identif in identifierTableGlobale):
 		x = identifierTableGlobale[identif]
@@ -53,6 +63,12 @@ def adresse(ident) :
 	if (ident in identifierTableGlobale) :
 		ad = identifierTableGlobale[ident]
 		return ad[1]
+	else :
+		print("Erreur : l'élément n'est pas dans la table des identificateurs")
+
+def afficheridentifierTableGlobale():
+	print(identifierTableGlobale)
+
 
 class DicoLocal:
 
@@ -87,14 +103,15 @@ class DicoLocal:
 		elif(ident in identifierTableGlobale):
 			return adresse(ident)
 		else :
-			print("erreur !")
+			print("Erreur : l'élément n'est pas dans la table des identificateurs")
 
 	def rangeIdent(self,ident) :
 		if (ident in self.dict):
 			return "local"
-		else:
+		elif (ident in identifierTableGlobale):
 			return "global"
-
+		else :
+			print("Erreur : l'élément n'est pas dans la table des identificateurs")
 
 dicoLoc = DicoLocal()	
 class AnaLexException(Exception):
