@@ -12,7 +12,7 @@ public class Lecteur {
 
     public Lecteur(String fichier) throws IOException {
         this.fichier = fichier;
-        this.co = 1;
+        this.co = 0;
         BufferedReader lecteurAvecBuffer = null;
         String ligne;
         file = new ArrayList<String>();
@@ -42,7 +42,7 @@ public class Lecteur {
 
 
     public String getLigne (){
-        return file.get(co-1);
+        return file.get(co);
     }
 
     public ArrayList<String> getFile(){

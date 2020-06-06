@@ -42,7 +42,7 @@ public class MachineNilNovi {
                 for (int i = 0; i < n; i++){
                     maPile.add(0);
                 }
-                ip = ip + n - 1;
+                ip = ip + n ;
             }
         }
         this.lecteur.next();
@@ -60,7 +60,7 @@ public class MachineNilNovi {
         if (!fin){
             Integer i = maPile.get(ip);
             Integer j = maPile.get(ip - 1);
-            if (j < ip) maPile.set(j, i);
+            if (j <= ip) maPile.set(j, i);
             maPile.remove(ip);
             maPile.remove(ip - 1);
             ip = ip - 2;
@@ -150,9 +150,8 @@ public class MachineNilNovi {
             Integer i = maPile.get(ip);
             maPile.remove(ip);
             ip --;
-            if (maPile.get(ip) == i) maPile.add(1);
-            else maPile.add(0);
-            ip++;
+            if (maPile.get(ip) == i) maPile.set(ip,1);
+            else maPile.set(ip,0);
         }
         this.lecteur.next();
     }
@@ -162,9 +161,8 @@ public class MachineNilNovi {
             Integer i = maPile.get(ip);
             maPile.remove(ip);
             ip --;
-            if (maPile.get(ip) != i) maPile.add(1);
-            else maPile.add(0);
-            ip++;
+            if (maPile.get(ip) != i) maPile.set(ip,1);
+            else maPile.set(ip,0);
         }
         this.lecteur.next();
     }
@@ -174,9 +172,8 @@ public class MachineNilNovi {
             Integer i = maPile.get(ip);
             maPile.remove(ip);
             ip --;
-            if (maPile.get(ip) < i) maPile.add(1);
-            else maPile.add(0);
-            ip++;
+            if (maPile.get(ip) < i) maPile.set(ip,1);
+            else maPile.set(ip,0);
         }
         this.lecteur.next();
     }
@@ -186,9 +183,8 @@ public class MachineNilNovi {
             Integer i = maPile.get(ip);
             maPile.remove(ip);
             ip --;
-            if (maPile.get(ip) <= i) maPile.add(1);
-            else maPile.add(0);
-            ip++;
+            if (maPile.get(ip) <= i) maPile.set(ip,1);
+            else maPile.set(ip,0);
         }
         this.lecteur.next();
     }
@@ -198,9 +194,8 @@ public class MachineNilNovi {
             Integer i = maPile.get(ip);
             maPile.remove(ip);
             ip --;
-            if (maPile.get(ip) > i) maPile.add(1);
-            else maPile.add(0);
-            ip++;
+            if (maPile.get(ip) > i) maPile.set(ip,1);
+            else maPile.set(ip,0);;
         }
         this.lecteur.next();
     }
@@ -210,9 +205,8 @@ public class MachineNilNovi {
             Integer i = maPile.get(ip);
             maPile.remove(ip);
             ip --;
-            if (maPile.get(ip) >= i) maPile.add(1);
-            else maPile.add(0);
-            ip++;
+            if (maPile.get(ip) >= i) maPile.set(ip,1);
+            else maPile.set(ip,0);
         }
         this.lecteur.next();
     }
@@ -224,9 +218,8 @@ public class MachineNilNovi {
             if ((i == 0 || i == 1) && (j == 0 || j == 1)) {
                 maPile.remove(ip);
                 ip--;
-                if (j == 1 && i == 1) maPile.add(1);
-                else maPile.add(0);
-                ip++;
+                if (j == 1 && i == 1) maPile.set(ip,1);
+                else maPile.set(ip,0);
             }
         }
         this.lecteur.next();
@@ -239,9 +232,8 @@ public class MachineNilNovi {
             if ((i == 0 || i == 1) && (j == 0 || j == 1)) {
                 maPile.remove(ip);
                 ip--;
-                if (j == 1 || i == 1) maPile.add(1);
-                else maPile.add(0);
-                ip++;
+                if (j == 1 || i == 1) maPile.set(ip,1);
+                else maPile.set(ip,0);
             }
         }
         this.lecteur.next();
@@ -262,9 +254,17 @@ public class MachineNilNovi {
         }
     }
 
-    public void tze(int ad){
-        if (!fin){
-            if (maPile.get(ip) == 0)  lecteur.go(ad);
+    public void tze(int ad) {
+        if (!fin) {
+            if (maPile.get(ip) == 0) {
+                lecteur.go(ad);
+                maPile.remove(ip);
+                ip--;
+            } else {
+                maPile.remove(ip);
+                ip--;
+                lecteur.next();
+            }
         }
     }
 
@@ -278,7 +278,7 @@ public class MachineNilNovi {
     public void empilerad(int ad){
         if (!fin){
             ip++;
-            maPile.add(ip, base + ad + 2);
+            maPile.add(base + ad + 2);
         }
         this.lecteur.next();
     }
@@ -286,7 +286,7 @@ public class MachineNilNovi {
     public void reserverBloc(){
         if (!fin){
             ip++;
-            maPile.add(ip, base);
+            maPile.add(base);
             ip++;
             maPile.add(0);
         }
@@ -295,8 +295,8 @@ public class MachineNilNovi {
 
     public void traStat(int a, int nbp){
         if (!fin){
-            maPile.set(ip - nbp - 1, lecteur.getCo());
-            this.base = ip - nbp - 2;
+            maPile.set(ip - nbp , lecteur.getCo()+1);
+            this.base = ip - nbp - 1;
             lecteur.go(a);
         }
     }
@@ -304,10 +304,10 @@ public class MachineNilNovi {
     public void retourFonct(){
         if (!fin){
             lecteur.go(maPile.get(base+1));
-            maPile.set(base-1,maPile.get(ip));
             int temp = base;
             base = maPile.get(base);
-            while (ip > temp - 1){
+            maPile.set(temp,maPile.get(ip));
+            while (ip > temp){
                 maPile.remove(ip);
                 ip--;
             }
@@ -319,7 +319,7 @@ public class MachineNilNovi {
             lecteur.go(maPile.get(base + 1));
             int temp = base;
             base = maPile.get(base);
-            while (ip > temp - 2){
+            while (ip > temp - 1){
                 maPile.remove(ip);
                 ip--;
             }
@@ -344,7 +344,7 @@ public class MachineNilNovi {
         }
         nomFonct =sligne.substring(0,s);
         param = sligne.substring(s);
-
+        System.out.println(nomFonct);    //debugger
         if (nomFonct.compareTo("debutProg") == 0){
             this.debutProg();
         }
@@ -407,6 +407,9 @@ public class MachineNilNovi {
         }
         if (nomFonct.compareTo("div") == 0){
             this.div();
+        }
+        if (nomFonct.compareTo("egal") == 0){
+            this.equal();
         }
         if (nomFonct.compareTo("diff") == 0){
             this.diff();
@@ -505,11 +508,15 @@ public class MachineNilNovi {
     public void compilation(String fichier) throws IOException {
         this.lecteur = new Lecteur(fichier);
         int lenFile = (lecteur.getFile()).size();
+
         while(lecteur.getCo() != lenFile ){
+
             this.parse();
             if(lecteur.getCo() >= 2){
                 System.out.println(maPile.toString());
-            }
+                System.out.println("ip=" + ip);
+                System.out.println("base=" + base);
+            } //debugger
         }
     }
 }
