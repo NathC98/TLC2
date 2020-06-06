@@ -35,20 +35,22 @@ identifierTableGlobale = dict()
 # 				complément : si tu stocke une valeur (pour une variable par exemple), tu la stcoke dans complément,
 
 def ajouterEntreeG(identif,typ,adress,complement) :
-    tab = (typ,adress,complement)
-    d = {identif : tab}
-    identifierTableGlobale.update(d)
+    tab = (typ,adress,complement) #on créé un tuple qui stocke les éléments associés à l'identificateur
+    d = {identif : tab} #on créé un dictionnaire où identif est une clé du dictionnaire
+    identifierTableGlobale.update(d) #on concatène notre dictionnaire avec le dictionnaire de la table des identifictauers à l'aide de la méthode
 
 #Fonction pour trouver un identificateur dans la table globale des identificateurs
 #Paramètres :
 #		identif : String qui est le nom de l'identificateur
-#		si le type
+#Renvoi :
+#		une adresse ou ce qui est stocké dans complément
+#
 #
 #
 def trouverEntreeG(identif):
-	if (identif in identifierTableGlobale):
-		x = identifierTableGlobale[identif]
-		typ = x[0]
+	if (identif in identifierTableGlobale): # on vérifie si l'identificateur est dans la table
+		x = identifierTableGlobale[identif] # on récupère les valeurs associées à identif dans identifierTableGlobale
+		typ = x[0] #
 		if (typ == "function" or typ == "procedure"):
 			return x[1]
 		elif (typ == "out"):
@@ -69,18 +71,23 @@ def adresse(ident) :
 def afficheridentifierTableGlobale():
 	print(identifierTableGlobale)
 
-
+#classe Dicolocal est une classe qui implémente les table des identificateurs locaux.
 class DicoLocal:
 
+	#l'attribut dict est un dictionnaire qui va nous permettre d'implémenter la table
 	def __init__(self):
 		self.dict=dict()
 
+#Fonction ajouter baséée sur le même principe que pour la table globale.
 	def ajouter(self,identif, typ, adress, complement):
 		tab = (typ, adress, complement)
 		d = {identif: tab}
 		self.dict.update(d)
 
-	# Fonction pour trouver une entrée dans la classe des identificateurs
+# Fonction pour trouver une entrée dans la classe des identificateurs basée sur la même implémentation que pour
+#la table globale.
+#
+	# On regarde si le'identifcateur est dans la table locale sinon on regarde dans la table globale
 	def trouver(self,identif):
 		if (identif in self.dict):
 			x = self.dict[identif]
@@ -95,7 +102,7 @@ class DicoLocal:
 			return trouverEntreeG(identif)
 		else:
 			print("Erreur : l'élément n'est pas dans la table des identificateurs")
-
+#fonction qui renvoie l'addresse d'un identificateur, soit
 	def adresse(self,ident):
 		if (ident in self.dict):
 			ad = self.dict[ident]
