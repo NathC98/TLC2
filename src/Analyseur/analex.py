@@ -92,7 +92,9 @@ def modifier(ident,comp):
 
 def supprComplement():
 	for ident in identifierTableGlobale :
-		identifierTableGlobale[ident][2]=""
+		tab=identifierTableGlobale[ident]
+		d=(tab[0],tab[1],"")
+		identifierTableGlobale[ident]=d
 
 #classe Dicolocal est une classe qui implémente les table des identificateurs locaux.
 
