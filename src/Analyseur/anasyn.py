@@ -325,6 +325,7 @@ def instr(lexical_analyser):
 			logger.debug("parsed procedure call")
 			codeGenerator.append("traStat(" + str(analex.adresse(ident)) + "," + str(argcount) + ");\n") #appel de la fonction a la bonne ligne et avec le bon nombre d'arguments
 			incrementeLigne()
+			analex.supprComplement()
 
 
 
@@ -339,7 +340,6 @@ def instr(lexical_analyser):
 def listePe(lexical_analyser):
 	expression(lexical_analyser)
 	incrementeArgcount()#on a une variable/expression de plus dans notre liste d'arguments
-	if 
 	if lexical_analyser.isCharacter(","):
 		lexical_analyser.acceptCharacter(",")
 		listePe(lexical_analyser)
@@ -506,7 +506,7 @@ def elemPrim(lexical_analyser):
 			codeGenerator.append("reserverBloc();\n")
 			incrementeLigne()
 			if existIn(ident):
-				
+				analex.modifier(ident,"in/out")
 			lexical_analyser.acceptCharacter("(")
 			if not lexical_analyser.isCharacter(")"):
 				listePe(lexical_analyser)
@@ -517,7 +517,7 @@ def elemPrim(lexical_analyser):
 			logger.debug("parsed procedure call")
 			codeGenerator.append("traStat(" + str(analex.adresse(ident)) + "," + str(argcount) + ");\n")
 			incrementeLigne()
-			
+			supprComplement()
 			logger.debug("Call to function: " + ident)
 		else:
 			logger.debug("Use of an identifier as an expression: " + ident) #c'est un identifiant qui est utilisé comme expression
