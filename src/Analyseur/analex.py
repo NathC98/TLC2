@@ -81,10 +81,10 @@ def afficheridentifierTableGlobale():
 	print(identifierTableGlobale)
 
 def modifier(ident,comp):
-  if(ident in identifierTableGlobale):
-      identifierTableGlobale[ident][2]=comp
-  else :
-    print("Erreur : l'élément n'est pas dans la table des identificateurs")
+	if(ident in identifierTableGlobale) :
+		identifierTableGlobale[ident][2]=comp
+	else :
+		print("Erreur : l'élément n'est pas dans la table des identificateurs")
 
 
 #classe Dicolocal est une classe qui implémente les table des identificateurs locaux.
