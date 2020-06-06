@@ -15,14 +15,14 @@ logger = logging.getLogger('anasyn')
 DEBUG = False
 LOGGING_LEVEL = logging.DEBUG
 codeGenerator = []
-ligne = 0
-adresse = 0
-operation = ""
-adProgram = 0
-traProg = 0
-argcount = 0
-currentOp = 0
-rangeVar = ""
+ligne = 0 #ligne en cours d'écriture dans object_code.txt
+adresse = 0 #adresse rentrées dans la table des identifiers
+operation = "" #operation en cours (mult, sous, add etc)
+adProgram = 0 #pour le tra initial
+traProg = 0 #pour le tra initial
+argcount = 0 #compteur d'arguments à réserver et pour trastat
+currentOp = 0 #Sommes nous dans le programme principal (0 = oui) (1 = non)
+rangeVar = "" #portée de la variable en cours de traitement, locale ou globale
 
 class AnaSynException(Exception):
 	def __init__(self, value):
@@ -42,10 +42,9 @@ def program(lexical_analyser):
 	incrementeLigne()
 
 	traProg = len(codeGenerator)
-	codeGenerator.append("complétée plus tard \n")
+	codeGenerator.append("complétée plus tard \n") #ligne complétée lorsque l'on saura où démarre le programme principal
 	incrementeLigne()
 
-	global argcount
 	corpsProgPrinc(lexical_analyser)
 	
 
@@ -74,27 +73,25 @@ def  corpsProgPrinc(lexical_analyser):
 	incrementeLigne()
 	
 def partieDecla(lexical_analyser):
-	global argcount
-	global adresse
+	global argcount #on va modifier cette variable globale
+	global adresse #on va modifier cette variable globale
 	if lexical_analyser.isKeyword("procedure") or lexical_analyser.isKeyword("function") :
 		listeDeclaOp(lexical_analyser)
-		adProgram = ligne + 1
-		codeGenerator[traProg + 1] = "tra(" + str(adProgram - 1) + "); \n"
+		adProgram = ligne
+		codeGenerator[traProg + 1] = "tra(" + str(adProgram) + "); \n" #on rempli la ligne du tra du programme principal avec la bonne adresse
 		if not lexical_analyser.isKeyword("begin"):
 			listeDeclaVar(lexical_analyser)
-			codeGenerator.append("reserver(" + str(argcount) + ");\n")
+			codeGenerator.append("reserver(" + str(argcount) + ");\n") #on réserve le bon nombre de variables
 			incrementeLigne()
-			adresse = 0
-			argcount = 0
-			#reserver
-		currentOp = 0
+			adresse = 0 #on réinitialise le compteur d'adresse puisque l'on passe dans un contexte local
+			argcount = 0 #on réinitialise le compteur d'arguments
+		currentOp = 0 #on est dans le programme principal
 	else :
 		listeDeclaVar(lexical_analyser)
-		codeGenerator.append("reserver(" + str(argcount) + ");\n")
+		codeGenerator.append("reserver(" + str(argcount) + ");\n")#on réserve le bon nombre de variables
 		incrementeLigne()
-		adresse = 0
-		argcount = 0
-		#reserver             
+		adresse = 0 #on réinitialise le compteur d'adresse puisque l'on passe dans un contexte local
+		argcount = 0 #on réinitialise le compteur d'arguments             
 
 def listeDeclaOp(lexical_analyser):
 	declaOp(lexical_analyser)
@@ -111,15 +108,15 @@ def declaOp(lexical_analyser):
 def procedure(lexical_analyser):
 	lexical_analyser.acceptKeyword("procedure")
 	ident = lexical_analyser.acceptIdentifier()
-	global currentOp
+	global currentOp #on va modifier cette variable globale
 	logger.debug("Name of procedure : "+ident)
-	if currentOp == 0:
-		analex.ajouterEntreeG(ident,"procedure",ligne,"")
+	if currentOp == 0:#si l'on est dans le programme principale
+		analex.ajouterEntreeG(ident,"procedure",ligne,"") #on ajoute cet identifiant a la table globale
 	else:
-		analex.ajouterEntreeG(ident,"procedure",ligne,"")
-		analex.dicoLoc.ajouter(ident,"procedure",ligne,"")
+		analex.ajouterEntreeG(ident,"procedure",ligne,"") #on ajoute cet identifiant a la table globale et
+		analex.dicoLoc.ajouter(ident,"procedure",ligne,"")#on ajoute cet identifiant a la table locale 
 
-	currentOp = 1
+	currentOp = 1 #on passe dans une fonction ou procédure annexe
 	partieFormelle(lexical_analyser)
 
 	lexical_analyser.acceptKeyword("is")
@@ -129,7 +126,7 @@ def procedure(lexical_analyser):
 	incrementeLigne()
        
 
-def fonction(lexical_analyser):
+def fonction(lexical_analyser): #même fonctionnement que pour procedure(lexical_analyser)
 	lexical_analyser.acceptKeyword("function")
 	ident = lexical_analyser.acceptIdentifier()
 	logger.debug("Name of function : "+ident)
@@ -186,11 +183,6 @@ def specif(lexical_analyser):
 		mode(lexical_analyser)
                 
 	nnpType(lexical_analyser)
-	#codeGenerator.append(str(ligne) + " empilerAd("+str(adressePile)+");\n")
-	#incrementeLigne()
-	#codeGenerator.append(str(ligne) + " valeurPile();\n")
-	#incrementeLigne()
-
 
 def mode(lexical_analyser):
 	lexical_analyser.acceptKeyword("in")
@@ -212,13 +204,12 @@ def nnpType(lexical_analyser):
 		raise AnaSynException("Unknown type found <"+ lexical_analyser.get_value() +">!")
 
 def partieDeclaProc(lexical_analyser):
-	global argcount
+	global argcount #on va modifier ces variables globales
 	global adresse
 	listeDeclaVar(lexical_analyser)
-	codeGenerator.append("reserver(" + str(argcount) + ");\n")
+	codeGenerator.append("reserver(" + str(argcount) + ");\n") #on reserve le bon nombre de variables
 	incrementeLigne()
-	#reserver
-	adresse = 0
+	adresse = 0 #on reinitialise les compteurs
 	argcount = 0
 
 def listeDeclaVar(lexical_analyser):
@@ -228,7 +219,7 @@ def listeDeclaVar(lexical_analyser):
 
 def declaVar(lexical_analyser):
 	global argcount
-	argcount = 0
+	argcount = 0 #on déclare une liste de variable, le compteur est donc initialisé
 	listeIdent(lexical_analyser)
 	lexical_analyser.acceptCharacter(":")
 	logger.debug("now parsing type...")
@@ -239,13 +230,12 @@ def listeIdent(lexical_analyser):
 	ident = lexical_analyser.acceptIdentifier()
 	logger.debug("identifier found: "+str(ident))
 	incrementeArgcount()
-	if currentOp == 0:
-		analex.ajouterEntreeG(ident,"identifier",adresse,"")
-		#incrementeAdresse()
+	if currentOp == 0: #si l'on est dans le programme principal
+		analex.ajouterEntreeG(ident,"identifier",adresse,"") #on ajoute l'identifiant a la table globale
 	else:
-		analex.ajouterEntreeG(ident,"identifier",adresse,"")
-		analex.dicoLoc.ajouter(ident,"identifier",adresse,"")
-		incrementeAdresse()
+		analex.ajouterEntreeG(ident,"identifier",adresse,"") #on ajoute l'identifiant a la table globale
+		analex.dicoLoc.ajouter(ident,"identifier",adresse,"") #on ajoute l'identifiant a la table locale
+		incrementeAdresse() #on incremente l'adresse pour la variable suivante
 	if lexical_analyser.isCharacter(","):
 		lexical_analyser.acceptCharacter(",")
 		listeIdent(lexical_analyser)
@@ -278,19 +268,15 @@ def instr(lexical_analyser):
 			# affectation
 
 			lexical_analyser.acceptSymbol(":=")
-			if parametreOut(ident):
-				#empilerparam
+			if parametreOut(ident): #est-ce un parametre de type out 
 				codeGenerator.append("empilerParam(" + str(analex.adresse(ident))+ ");\n")
 				incrementeLigne()
-			elif rangeVar == "local":
-				#empilerAd
-				print(ident)
+			elif rangeVar == "local": #est-ce une variable locale 
 				codeGenerator.append("empilerAd(" + str(analex.adresse(ident))+ ");\n")
 				incrementeLigne()
-			else :
+			else : #est-ce une variable globale
 				codeGenerator.append("empiler(" + str(analex.adresse(ident))+ ");\n")
 				incrementeLigne()
-				#empiler
 			expression(lexical_analyser)
 			logger.debug("parsed affectation")
 
@@ -298,7 +284,7 @@ def instr(lexical_analyser):
 			incrementeLigne()
 
 
-		elif lexical_analyser.isCharacter("("):
+		elif lexical_analyser.isCharacter("("): #on appelle une fonction/procédure
 			lexical_analyser.acceptCharacter("(")
 
 			codeGenerator.append("reserverBloc()\n")
@@ -309,10 +295,10 @@ def instr(lexical_analyser):
 
 			lexical_analyser.acceptCharacter(")")
 			logger.debug("parsed procedure call")
-			codeGenerator.append("traStat(" + str(analex.adresse(ident)) + "," + str(argcount) + ");\n")
+			codeGenerator.append("traStat(" + str(analex.adresse(ident)) + "," + str(argcount) + ");\n") #appel de la fonction a la bonne ligne et avec le bon nombre d'arguments
 			incrementeLigne()
 
-			argcount = 0
+			argcount = 0 #on réinitialise le compteur d'arguments de la fonction appelée précedemment
 
 
 
@@ -340,7 +326,7 @@ def expression(lexical_analyser):
 		exp1(lexical_analyser)
 	writeOperation()
 	global operation
-	operation = ""
+	operation = "" #on est dans une opération unaire ou binaire, on initialise notre mémoire de l'opération en cours
 
 
         
@@ -369,7 +355,7 @@ def exp2(lexical_analyser):
 	
 def opRel(lexical_analyser):
 	logger.debug("parsing relationnal operator: " + lexical_analyser.get_value())
-	global operation
+	global operation #on va mémoriser l'operation
 	if	lexical_analyser.isSymbol("<"):
 		lexical_analyser.acceptSymbol("<")
 		operation = "<"
@@ -403,13 +389,12 @@ def exp3(lexical_analyser):
 	logger.debug("parsing exp3")
 	exp4(lexical_analyser)	
 	if lexical_analyser.isCharacter("+") or lexical_analyser.isCharacter("-"):
-
 		opAdd(lexical_analyser)
 		exp4(lexical_analyser)
 
 def opAdd(lexical_analyser):
 	logger.debug("parsing additive operator: " + lexical_analyser.get_value())
-	global operation
+	global operation #on va mémoriser l'opération
 	if lexical_analyser.isCharacter("+"):
 		operation = "+"
 		lexical_analyser.acceptCharacter("+")
@@ -434,7 +419,7 @@ def exp4(lexical_analyser):
 
 def opMult(lexical_analyser):
 	logger.debug("parsing multiplicative operator: " + lexical_analyser.get_value())
-	global operation
+	global operation #on va mémoriser l'opération
 	if lexical_analyser.isCharacter("*"):
 		operation = "*"
 		lexical_analyser.acceptCharacter("*")
@@ -458,7 +443,7 @@ def prim(lexical_analyser):
 
 def opUnaire(lexical_analyser):
 	logger.debug("parsing unary operator: " + lexical_analyser.get_value())
-	global operation
+	global operation #on va mémoriser l'opération
 	if lexical_analyser.isCharacter("+"):
 		lexical_analyser.acceptCharacter("+")
                 
@@ -488,10 +473,10 @@ def elemPrim(lexical_analyser):
 		ident = lexical_analyser.acceptIdentifier()
 		global rangeVar
 		global argcount
-		rangeVar = analex.dicoLoc.rangeIdent(ident)
-		if lexical_analyser.isCharacter("("):
+		rangeVar = analex.dicoLoc.rangeIdent(ident) #on mémorise la portée de l'identifiant
+		if lexical_analyser.isCharacter("("): #c'est un appel de fonction/procédure
 			codeGenerator.append("reserverBloc();\n")
-			incrementeLigne()			# Appel fonct
+			incrementeLigne()
 			lexical_analyser.acceptCharacter("(")
 			if not lexical_analyser.isCharacter(")"):
 				listePe(lexical_analyser)
@@ -507,22 +492,18 @@ def elemPrim(lexical_analyser):
 
 			logger.debug("Call to function: " + ident)
 		else:
-			logger.debug("Use of an identifier as an expression: " + ident)
-			if rangeVar == "local":
+			logger.debug("Use of an identifier as an expression: " + ident) #c'est un identifiant qui est utilisé comme expression
+			if rangeVar == "local": #quelle est la portée de la variable 
 				if parametreOut(ident):
-					#empilerparam
 					codeGenerator.append("empilerParam(" + str(analex.adresse(ident))+ ");\n")
 					incrementeLigne()
 				else:
-					#empilerAd
 					codeGenerator.append("empilerAd(" + str(analex.adresse(ident))+ ");\n")
 					incrementeLigne()
 			else:
 				codeGenerator.append("empiler(" + str(analex.adresse(ident))+ ");\n")
 				incrementeLigne()
-				#empiler
-
-			codeGenerator.append("valeurPile();\n")
+			codeGenerator.append("valeurPile();\n") #c'est une expression, on a alors besoin de suivre notre empiler avec valeurPile
 			incrementeLigne()
 	else:
 		logger.error("Unknown Value!")
@@ -532,7 +513,7 @@ def valeur(lexical_analyser):
 	if lexical_analyser.isInteger():
 		entier = lexical_analyser.acceptInteger()
 
-		codeGenerator.append("empiler("+str(entier)+"); \n")
+		codeGenerator.append("empiler("+str(entier)+"); \n") #on empile directement l'entier
 		incrementeLigne()
 
 		logger.debug("integer value: " + str(entier))
@@ -545,7 +526,7 @@ def valeur(lexical_analyser):
 		raise AnaSynException("Unknown Value ! Expecting an integer or a boolean value!")
 
 def valBool(lexical_analyser):
-	if lexical_analyser.isKeyword("true"):
+	if lexical_analyser.isKeyword("true"): #on va empiler 1 ou 0 selon la valeur du bool
 		lexical_analyser.acceptKeyword("true")
 
 		codeGenerator.append("empiler(1); \n")
@@ -592,11 +573,11 @@ def es(lexical_analyser):
 def boucle(lexical_analyser):
 	logger.debug("parsing while loop: ")
 	lexical_analyser.acceptKeyword("while")
-	ad1 = ligne + 1
+	ad1 = ligne #on devra se référer a cette ligne dans notre tra
 	expression(lexical_analyser)
 
-	tze = len(codeGenerator)
-	codeGenerator.append("complétée plus tard \n")
+	tze = len(codeGenerator) #on stocke la ligne a laquelle on devra revenir
+	codeGenerator.append("complétée plus tard \n")#on complètera lorsque l'on saura quelle est la ligne a référer
 	incrementeLigne()
 
 	lexical_analyser.acceptKeyword("loop")
@@ -604,11 +585,11 @@ def boucle(lexical_analyser):
 
 	suiteInstr(lexical_analyser)
 
-	codeGenerator.append("tra(" + str(ad1 - 1) + "); \n")
+	codeGenerator.append("tra(" + str(ad1) + "); \n")
 	incrementeLigne()
 	lexical_analyser.acceptKeyword("end")
-	ad2 = ligne + 1
-	codeGenerator[tze] = "tze(" + str(ad2 - 1) + "); \n"
+	ad2 = ligne #on devra se référer a cette ligne dans notre tze
+	codeGenerator[tze] = "tze(" + str(ad2) + "); \n" #on remplit la ligne laissé vide
 	logger.debug("end of while loop ")
 
 def altern(lexical_analyser):
@@ -617,30 +598,28 @@ def altern(lexical_analyser):
 
 	expression(lexical_analyser)
 
-	tze = len(codeGenerator)
-	codeGenerator.append("complétée plus tard \n")
+	tze = len(codeGenerator) #on stocke la ligne a laquelle on devra revenir
+	codeGenerator.append("complétée plus tard \n")#on complètera lorsque l'on saura quelle est la ligne a référer
 	incrementeLigne()
 	lexical_analyser.acceptKeyword("then")
 
 
 	suiteInstr(lexical_analyser)
 
-	ad1 = ligne + 1
-	codeGenerator[tze] = "tze("+ str(ad1 - 1) + "); \n"
+	ad1 = ligne#on devra se référer a cette ligne dans notre tze
+	codeGenerator[tze] = "tze("+ str(ad1) + "); \n"
 	
-	if lexical_analyser.isKeyword("else"):
-		#codeGenerator.append(str(ligne) + " tra(ad2); \n")
+	if lexical_analyser.isKeyword("else"): #c'est une alternative, on suit la même marche que pour les tra et tze précédents
 		tra = len(codeGenerator)
 		codeGenerator.append("complétée plus tard \n")
 		incrementeLigne()
-		#incrementeLigne()
 		lexical_analyser.acceptKeyword("else")
 		
 		suiteInstr(lexical_analyser)
        
 	lexical_analyser.acceptKeyword("end")
-	ad2 = ligne + 1
-	codeGenerator[tra] = "tra(" + str(ad2 - 1) + "); \n"
+	ad2 = ligne
+	codeGenerator[tra] = "tra(" + str(ad2) + "); \n"
 	logger.debug("end of if")
 
 def retour(lexical_analyser):
@@ -662,14 +641,9 @@ def incrementeAdresse():
 	global adresse
 	adresse = adresse + 1
 
-def decrementeAdresse():
-	global adresse
-	adresse = adresse - 1
-
-def writeOperation():
+def writeOperation(): #on écrit dans le code objet l'opération en mémoire
 	if operation == "=":
 		codeGenerator.append("egal();\n")
-		#decrementeAdresse()
 		incrementeLigne()
 	elif operation == "moins":
 		codeGenerator.append("moins();\n")
@@ -679,39 +653,30 @@ def writeOperation():
 		incrementeLigne()
 	elif operation == "+":
 		codeGenerator.append("add();\n")
-		#decrementeAdresse()
 		incrementeLigne()
 	elif operation == "-":
 		codeGenerator.append("sous();\n")
-		#decrementeAdresse()
 		incrementeLigne()
 	elif operation == "*":
 		codeGenerator.append("mult();\n")
-		#decrementeAdresse()
 		incrementeLigne()
 	elif operation == "/":
 		codeGenerator.append("div();\n")
-		#decrementeAdresse()
 		incrementeLigne()
 	elif operation == "/=":
 		codeGenerator.append("diff();\n")
-		#decrementeAdresse()
 		incrementeLigne()
 	elif operation == "<":
 		codeGenerator.append("inf();\n")
-		#decrementeAdresse()
 		incrementeLigne()
 	elif operation == "<=":
 		codeGenerator.append("infeq();\n")
-		#decrementeAdresse()
 		incrementeLigne()
 	elif operation == ">":
 		codeGenerator.append("sup();\n")
-		#decrementeAdresse()
 		incrementeLigne()
 	elif operation == ">=":
 		codeGenerator.append("supeq();\n")
-		#decrementeAdresse()
 		incrementeLigne()
 
 def parametreOut(ident):
@@ -818,10 +783,8 @@ def main():
 	# Outputs the generated code to a file
 	output_file = open("../../codeObjets/object_code.txt", 'w')
 	instrIndex = 0
-	while instrIndex < len(codeGenerator):
+	while instrIndex < len(codeGenerator): #on rempli object_code.txt avec les chaînes de caractères en mises en mémoire durant l'execution du programme
 		output_file.write(codeGenerator[instrIndex])
-	##while instrIndex < codeGenerator.get_instruction_counter():
-	##	output_file.write("%s\n" % str(codeGenerator.get_instruction_at_index(instrIndex)))
 		instrIndex += 1
 
 	print(analex.identifierTableGlobale)
