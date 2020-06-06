@@ -10,6 +10,8 @@ public class Lecteur {
     private int co;
     private ArrayList<String> file;
 
+    // Classed permettant de lire les fichiers de code objets
+
     public Lecteur(String fichier) throws IOException {
         this.fichier = fichier;
         this.co = 0;
@@ -24,6 +26,8 @@ public class Lecteur {
         {
             System.out.println("Erreur d'ouverture");
         }
+        // On met toutes les lignes du fichier dans un tableau ce qui permet d'éviter de relire le txt et d'accéder
+        //directement à une ligne précise
         while ((ligne = lecteurAvecBuffer.readLine()) != null) {
             file.add(ligne);
         }

@@ -1,4 +1,0 @@
-debuProg();
-empiler(5);
-empilerParam(0);
-finProg();

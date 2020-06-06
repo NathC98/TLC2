@@ -21,6 +21,11 @@ public class MachineNilNovi {
         maPile = new ArrayList<Integer>();
         fin = false;
     }
+
+ //----------------------------------------------------------------------------------------------------------------------
+ //Début des fonction du language NilNovi procédural
+ //Voir polycopié pour savoir ce que font les fonctions de cette catégorie
+
     public void debutProg(){
         maPile = new ArrayList<Integer>();
         maPile.add(0);
@@ -334,6 +339,10 @@ public class MachineNilNovi {
         this.lecteur.next();
     }
 
+ // Fin fonction pour le language Nil Novi Procédurale
+ //--------------------------------------------------------------------------------------------------------------------------------------
+
+// La fonction parse permet de savoir à quelle fonction correspond la ligne du fichier texte
     public void parse(){
         String sligne = lecteur.getLigne();
         String nomFonct;
@@ -344,7 +353,7 @@ public class MachineNilNovi {
         }
         nomFonct =sligne.substring(0,s);
         param = sligne.substring(s);
-        System.out.println(nomFonct);    //debugger
+     /*   System.out.println(nomFonct);  */  //debugger
         if (nomFonct.compareTo("debutProg") == 0){
             this.debutProg();
         }
@@ -505,6 +514,7 @@ public class MachineNilNovi {
         return maPile;
     }
 
+    //Fonction permettant de faire de compiler le fichier passé en entré
     public void compilation(String fichier) throws IOException {
         this.lecteur = new Lecteur(fichier);
         int lenFile = (lecteur.getFile()).size();
@@ -512,11 +522,11 @@ public class MachineNilNovi {
         while(lecteur.getCo() != lenFile ){
 
             this.parse();
-            if(lecteur.getCo() >= 2){
+      /*      if(lecteur.getCo() >= 2){
                 System.out.println(maPile.toString());
                 System.out.println("ip=" + ip);
                 System.out.println("base=" + base);
-            } //debugger
+            }*/ //debugger
         }
     }
 }
