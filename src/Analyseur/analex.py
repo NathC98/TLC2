@@ -80,12 +80,19 @@ def adresse(ident) :
 def afficheridentifierTableGlobale():
 	print(identifierTableGlobale)
 
+#modifie le complement d'un identificateur passé en apramètre
+
 def modifier(ident,comp):
 	if(ident in identifierTableGlobale) :
 		identifierTableGlobale[ident][2]=comp
 	else :
 		print("Erreur : l'élément n'est pas dans la table des identificateurs")
 
+#fonction qui réinitialise tout les compléments de la table globale
+
+def supprComplement():
+	for ident in identifierTableGlobale :
+		ident[2]=""
 
 #classe Dicolocal est une classe qui implémente les table des identificateurs locaux.
 
