@@ -74,20 +74,26 @@ def  corpsProgPrinc(lexical_analyser):
 	incrementeLigne()
 	
 def partieDecla(lexical_analyser):
+	global argcount
+	global adresse
 	if lexical_analyser.isKeyword("procedure") or lexical_analyser.isKeyword("function") :
 		listeDeclaOp(lexical_analyser)
 		adProgram = ligne + 1
-		codeGenerator[traProg + 1] = str(traProg+1) + " tra(" + str(adProgram) + "); \n"
+		codeGenerator[traProg + 1] = "tra(" + str(adProgram - 1) + "); \n"
 		if not lexical_analyser.isKeyword("begin"):
 			listeDeclaVar(lexical_analyser)
 			codeGenerator.append("reserver(" + str(argcount) + ");\n")
 			incrementeLigne()
+			adresse = 0
+			argcount = 0
 			#reserver
 		currentOp = 0
 	else :
 		listeDeclaVar(lexical_analyser)
 		codeGenerator.append("reserver(" + str(argcount) + ");\n")
 		incrementeLigne()
+		adresse = 0
+		argcount = 0
 		#reserver             
 
 def listeDeclaOp(lexical_analyser):
@@ -109,8 +115,8 @@ def procedure(lexical_analyser):
 	logger.debug("Name of procedure : "+ident)
 	if currentOp == 0:
 		analex.ajouterEntreeG(ident,"procedure",ligne,"")
-		incrementeAdresse()
 	else:
+		analex.ajouterEntreeG(ident,"procedure",ligne,"")
 		analex.dicoLoc.ajouter(ident,"procedure",ligne,"")
 
 	currentOp = 1
@@ -130,8 +136,8 @@ def fonction(lexical_analyser):
 	global currentOp
 	if currentOp == 0:
 		analex.ajouterEntreeG(ident,"function",ligne,"")
-		incrementeAdresse()
 	else:
+		analex.ajouterEntreeG(ident,"function",ligne,"")
 		analex.dicoLoc.ajouter(ident,"function",ligne,"")
 
 	currentOp = 1
@@ -206,10 +212,14 @@ def nnpType(lexical_analyser):
 		raise AnaSynException("Unknown type found <"+ lexical_analyser.get_value() +">!")
 
 def partieDeclaProc(lexical_analyser):
+	global argcount
+	global adresse
 	listeDeclaVar(lexical_analyser)
 	codeGenerator.append("reserver(" + str(argcount) + ");\n")
 	incrementeLigne()
 	#reserver
+	adresse = 0
+	argcount = 0
 
 def listeDeclaVar(lexical_analyser):
 	declaVar(lexical_analyser)
@@ -231,9 +241,11 @@ def listeIdent(lexical_analyser):
 	incrementeArgcount()
 	if currentOp == 0:
 		analex.ajouterEntreeG(ident,"identifier",adresse,"")
-		incrementeAdresse()
+		#incrementeAdresse()
 	else:
-		analex
+		analex.ajouterEntreeG(ident,"identifier",adresse,"")
+		analex.dicoLoc.ajouter(ident,"identifier",adresse,"")
+		incrementeAdresse()
 	if lexical_analyser.isCharacter(","):
 		lexical_analyser.acceptCharacter(",")
 		listeIdent(lexical_analyser)
@@ -248,7 +260,8 @@ def suiteInstr(lexical_analyser):
 	if not lexical_analyser.isKeyword("end"):
 		suiteInstrNonVide(lexical_analyser)
 
-def instr(lexical_analyser):	
+def instr(lexical_analyser):
+	global argcount	
 	if lexical_analyser.isKeyword("while"):
 		boucle(lexical_analyser)
 	elif lexical_analyser.isKeyword("if"):
@@ -267,14 +280,15 @@ def instr(lexical_analyser):
 			lexical_analyser.acceptSymbol(":=")
 			if parametreOut(ident):
 				#empilerparam
-				codeGenerator.append("empilerParam(" + str(adresse(ident))+ ";\n")
+				codeGenerator.append("empilerParam(" + str(analex.adresse(ident))+ ");\n")
 				incrementeLigne()
 			elif rangeVar == "local":
 				#empilerAd
-				codeGenerator.append("empilerAd(" + str(adresse(ident))+ ";\n")
+				print(ident)
+				codeGenerator.append("empilerAd(" + str(analex.adresse(ident))+ ");\n")
 				incrementeLigne()
 			else :
-				codeGenerator.append("empiler(" + str(adresse(ident))+ ";\n")
+				codeGenerator.append("empiler(" + str(analex.adresse(ident))+ ");\n")
 				incrementeLigne()
 				#empiler
 			expression(lexical_analyser)
@@ -298,6 +312,8 @@ def instr(lexical_analyser):
 			codeGenerator.append("traStat(" + str(analex.adresse(ident)) + "," + str(argcount) + ");\n")
 			incrementeLigne()
 
+			argcount = 0
+
 
 
 		else:
@@ -317,9 +333,6 @@ def listePe(lexical_analyser):
 
 def expression(lexical_analyser):
 	logger.debug("parsing expression: " + str(lexical_analyser.get_value()))
-
-	codeGenerator.append("EmpilerAd(" + str(adresse) + ");\n")
-	incrementeLigne()
 
 	exp1(lexical_analyser)
 	if lexical_analyser.isKeyword("or"):
@@ -390,10 +403,6 @@ def exp3(lexical_analyser):
 	logger.debug("parsing exp3")
 	exp4(lexical_analyser)	
 	if lexical_analyser.isCharacter("+") or lexical_analyser.isCharacter("-"):
-		codeGenerator.append("EmpilerAd(" + str(adresse) + ");\n")
-		incrementeLigne()
-		codeGenerator.append("valeurPile();\n")
-		incrementeLigne()
 
 		opAdd(lexical_analyser)
 		exp4(lexical_analyser)
@@ -419,10 +428,6 @@ def exp4(lexical_analyser):
         
 	prim(lexical_analyser)	
 	if lexical_analyser.isCharacter("*") or lexical_analyser.isCharacter("/"):
-		codeGenerator.append("EmpilerAd(" + str(adresse) + ");\n")
-		incrementeLigne()
-		codeGenerator.append("valeurPile();\n")
-		incrementeLigne()
 
 		opMult(lexical_analyser)
 		prim(lexical_analyser)
@@ -447,10 +452,6 @@ def prim(lexical_analyser):
 	logger.debug("parsing prim")
         
 	if lexical_analyser.isCharacter("+") or lexical_analyser.isCharacter("-") or lexical_analyser.isKeyword("not"):
-		codeGenerator.append("EmpilerAd(" + str(adresse) + ");\n")
-		incrementeLigne()
-		codeGenerator.append("valeurPile();\n")
-		incrementeLigne()
 
 		opUnaire(lexical_analyser)
 	elemPrim(lexical_analyser)
@@ -486,6 +487,7 @@ def elemPrim(lexical_analyser):
 	elif lexical_analyser.isIdentifier():
 		ident = lexical_analyser.acceptIdentifier()
 		global rangeVar
+		global argcount
 		rangeVar = analex.dicoLoc.rangeIdent(ident)
 		if lexical_analyser.isCharacter("("):
 			codeGenerator.append("reserverBloc();\n")
@@ -495,6 +497,9 @@ def elemPrim(lexical_analyser):
 				listePe(lexical_analyser)
 			codeGenerator.append("traStat(" + str(analex.adresse(ident)) + "," + str(argcount) + ");\n")
 			incrementeLigne()
+			
+			argcount = 0
+
 			lexical_analyser.acceptCharacter(")")
 
 
@@ -506,14 +511,14 @@ def elemPrim(lexical_analyser):
 			if rangeVar == "local":
 				if parametreOut(ident):
 					#empilerparam
-					codeGenerator.append("empilerParam(" + str(adresse(ident))+ ";\n")
+					codeGenerator.append("empilerParam(" + str(analex.adresse(ident))+ ");\n")
 					incrementeLigne()
 				else:
 					#empilerAd
-					codeGenerator.append("empilerAd(" + str(adresse(ident))+ ";\n")
+					codeGenerator.append("empilerAd(" + str(analex.adresse(ident))+ ");\n")
 					incrementeLigne()
 			else:
-				codeGenerator.append("empiler(" + str(adresse(ident))+ ";\n")
+				codeGenerator.append("empiler(" + str(analex.adresse(ident))+ ");\n")
 				incrementeLigne()
 				#empiler
 
@@ -599,11 +604,11 @@ def boucle(lexical_analyser):
 
 	suiteInstr(lexical_analyser)
 
-	codeGenerator.append("tra(" + str(ad1) + "); \n")
+	codeGenerator.append("tra(" + str(ad1 - 1) + "); \n")
 	incrementeLigne()
 	lexical_analyser.acceptKeyword("end")
 	ad2 = ligne + 1
-	codeGenerator[tze] = str(tze) + " tze(" + str(ad2) + "); \n"
+	codeGenerator[tze] = "tze(" + str(ad2 - 1) + "); \n"
 	logger.debug("end of while loop ")
 
 def altern(lexical_analyser):
@@ -621,7 +626,7 @@ def altern(lexical_analyser):
 	suiteInstr(lexical_analyser)
 
 	ad1 = ligne + 1
-	codeGenerator[tze] = str(tze) + " tze("+ str(ad1) + "); \n"
+	codeGenerator[tze] = "tze("+ str(ad1 - 1) + "); \n"
 	
 	if lexical_analyser.isKeyword("else"):
 		#codeGenerator.append(str(ligne) + " tra(ad2); \n")
@@ -635,7 +640,7 @@ def altern(lexical_analyser):
        
 	lexical_analyser.acceptKeyword("end")
 	ad2 = ligne + 1
-	codeGenerator[tra] = str(tra) + " tra(" + str(ad2) + "); \n"
+	codeGenerator[tra] = "tra(" + str(ad2 - 1) + "); \n"
 	logger.debug("end of if")
 
 def retour(lexical_analyser):
@@ -663,49 +668,49 @@ def decrementeAdresse():
 
 def writeOperation():
 	if operation == "=":
-		codeGenerator.append(str(ligne) + " egal();\n")
+		codeGenerator.append("egal();\n")
 		#decrementeAdresse()
 		incrementeLigne()
 	elif operation == "moins":
-		codeGenerator.append(str(ligne) + " moins();\n")
+		codeGenerator.append("moins();\n")
 		incrementeLigne()
 	elif operation == "not":
-		codeGenerator.append(str(ligne) + " non();\n")
+		codeGenerator.append("non();\n")
 		incrementeLigne()
 	elif operation == "+":
-		codeGenerator.append(str(ligne) + " add();\n")
+		codeGenerator.append("add();\n")
 		#decrementeAdresse()
 		incrementeLigne()
 	elif operation == "-":
-		codeGenerator.append(str(ligne) + " sous();\n")
+		codeGenerator.append("sous();\n")
 		#decrementeAdresse()
 		incrementeLigne()
 	elif operation == "*":
-		codeGenerator.append(str(ligne) + " mult();\n")
+		codeGenerator.append("mult();\n")
 		#decrementeAdresse()
 		incrementeLigne()
 	elif operation == "/":
-		codeGenerator.append(str(ligne) + " div();\n")
+		codeGenerator.append("div();\n")
 		#decrementeAdresse()
 		incrementeLigne()
 	elif operation == "/=":
-		codeGenerator.append(str(ligne) + " diff();\n")
+		codeGenerator.append("diff();\n")
 		#decrementeAdresse()
 		incrementeLigne()
 	elif operation == "<":
-		codeGenerator.append(str(ligne) + " inf();\n")
+		codeGenerator.append("inf();\n")
 		#decrementeAdresse()
 		incrementeLigne()
 	elif operation == "<=":
-		codeGenerator.append(str(ligne) + " infeq();\n")
+		codeGenerator.append("infeq();\n")
 		#decrementeAdresse()
 		incrementeLigne()
 	elif operation == ">":
-		codeGenerator.append(str(ligne) + " sup();\n")
+		codeGenerator.append("sup();\n")
 		#decrementeAdresse()
 		incrementeLigne()
 	elif operation == ">=":
-		codeGenerator.append(str(ligne) + " supeq();\n")
+		codeGenerator.append("supeq();\n")
 		#decrementeAdresse()
 		incrementeLigne()
 
