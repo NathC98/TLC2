@@ -23,6 +23,7 @@ traProg = 0 #pour le tra initial
 argcount = 0 #compteur d'arguments à réserver et pour trastat
 currentOp = 0 #Sommes nous dans le programme principal (0 = oui) (1 = non)
 rangeVar = "" #portée de la variable en cours de traitement, locale ou globale
+modeId = "" #mode de l'identifiant ("in" ou "in out")
 
 class AnaSynException(Exception):
 	def __init__(self, value):
@@ -148,18 +149,30 @@ def fonction(lexical_analyser): #même fonctionnement que pour procedure(lexical
 
 
 def corpsProc(lexical_analyser):
+	global currentOp
+	global adresse
+	global argcount
 	if not lexical_analyser.isKeyword("begin"):
 		partieDeclaProc(lexical_analyser)
 	lexical_analyser.acceptKeyword("begin")
 	suiteInstr(lexical_analyser)
 	lexical_analyser.acceptKeyword("end")
+	currentOp = 0
+	adresse = 0
+	argcount = 0
 
 def corpsFonct(lexical_analyser):
+	global currentOp
+	global adresse
+	global argcount
 	if not lexical_analyser.isKeyword("begin"):
 		partieDeclaProc(lexical_analyser)
 	lexical_analyser.acceptKeyword("begin")
 	suiteInstrNonVide(lexical_analyser)
 	lexical_analyser.acceptKeyword("end")
+	currentOp = 0
+	adresse = 0
+	argcount = 0
 
 def partieFormelle(lexical_analyser):
 	global argcount
@@ -185,11 +198,14 @@ def specif(lexical_analyser):
 	nnpType(lexical_analyser)
 
 def mode(lexical_analyser):
+	global modeId
 	lexical_analyser.acceptKeyword("in")
 	if lexical_analyser.isKeyword("out"):
+		modeId = "in out"
 		lexical_analyser.acceptKeyword("out")
-		logger.debug("in out parameter")                
+		logger.debug("in out parameter")
 	else:
+		modeId = "in"
 		logger.debug("in parameter")
 
 def nnpType(lexical_analyser):
@@ -225,14 +241,29 @@ def declaVar(lexical_analyser):
 	lexical_analyser.acceptCharacter(";")
 
 def listeIdent(lexical_analyser):
+	global modeId
 	ident = lexical_analyser.acceptIdentifier()
+	incrementeArgcount()
 	logger.debug("identifier found: "+str(ident))
 	if currentOp == 0: #si l'on est dans le programme principal
-		analex.ajouterEntreeG(ident,"identifier",adresse,"") #on ajoute l'identifiant a la table globale
+		analex.ajouterEntreeG(ident,"identifier",adresse,"in/out") #on ajoute l'identifiant a la table globale
 	else:
-		analex.ajouterEntreeG(ident,"identifier",adresse,"") #on ajoute l'identifiant a la table globale
-		analex.dicoLoc.ajouter(ident,"identifier",adresse,"") #on ajoute l'identifiant a la table locale
-		incrementeAdresse() #on incremente l'adresse pour la variable suivante
+		if modeId == "in out":
+			analex.ajouterEntreeG(ident,"identifier",adresse,"in/out") #on ajoute l'identifiant a la table globale
+			analex.dicoLoc.ajouter(ident,"identifier",adresse,"in/out") #on ajoute l'identifiant a la table locale
+			incrementeAdresse() #on incremente l'adresse pour la variable suivante
+			modeId = ""
+		elif modeId == "in":
+			analex.ajouterEntreeG(ident,"identifier",adresse,"in") #on ajoute l'identifiant a la table globale
+			analex.dicoLoc.ajouter(ident,"identifier",adresse,"in") #on ajoute l'identifiant a la table locale
+			incrementeAdresse() #on incremente l'adresse pour la variable suivante
+			modeId = ""
+		else: 
+			analex.ajouterEntreeG(ident,"identifier",adresse,"") #on ajoute l'identifiant a la table globale
+			analex.dicoLoc.ajouter(ident,"identifier",adresse,"") #on ajoute l'identifiant a la table locale
+			incrementeAdresse() #on incremente l'adresse pour la variable suivante
+			modeId = ""
+
 	if lexical_analyser.isCharacter(","):
 		lexical_analyser.acceptCharacter(",")
 		listeIdent(lexical_analyser)
@@ -272,7 +303,7 @@ def instr(lexical_analyser):
 				codeGenerator.append("empilerAd(" + str(analex.adresse(ident))+ ");\n")
 				incrementeLigne()
 			else : #est-ce une variable globale
-				codeGenerator.append("empiler(" + str(analex.adresse(ident))+ ");\n")
+				codeGenerator.append("empiler(" + str(analex.adresse(ident) + 2)+ ");\n")
 				incrementeLigne()
 			expression(lexical_analyser)
 			logger.debug("parsed affectation")
@@ -308,6 +339,7 @@ def instr(lexical_analyser):
 def listePe(lexical_analyser):
 	expression(lexical_analyser)
 	incrementeArgcount()#on a une variable/expression de plus dans notre liste d'arguments
+	if 
 	if lexical_analyser.isCharacter(","):
 		lexical_analyser.acceptCharacter(",")
 		listePe(lexical_analyser)
@@ -473,6 +505,8 @@ def elemPrim(lexical_analyser):
 			argcount = 0 #on initialise notre compteur d'arguments
 			codeGenerator.append("reserverBloc();\n")
 			incrementeLigne()
+			if existIn(ident):
+				
 			lexical_analyser.acceptCharacter("(")
 			if not lexical_analyser.isCharacter(")"):
 				listePe(lexical_analyser)
@@ -491,14 +525,22 @@ def elemPrim(lexical_analyser):
 				if parametreOut(ident):
 					codeGenerator.append("empilerParam(" + str(analex.adresse(ident))+ ");\n")
 					incrementeLigne()
+					codeGenerator.append("valeurPile();\n") #c'est une expression, on a alors besoin de suivre notre empiler avec valeurPile
+					incrementeLigne()
 				else:
 					codeGenerator.append("empilerAd(" + str(analex.adresse(ident))+ ");\n")
 					incrementeLigne()
+					codeGenerator.append("valeurPile();\n") #c'est une expression, on a alors besoin de suivre notre empiler avec valeurPile
+					incrementeLigne()
 			else:
-				codeGenerator.append("empiler(" + str(analex.adresse(ident))+ ");\n")
-				incrementeLigne()
-			codeGenerator.append("valeurPile();\n") #c'est une expression, on a alors besoin de suivre notre empiler avec valeurPile
-			incrementeLigne()
+				if parametreOut(ident):
+					codeGenerator.append("empiler(" + str(analex.adresse(ident) + 2)+ ");\n")
+					incrementeLigne()
+				else:
+					codeGenerator.append("empiler(" + str(analex.adresse(ident) + 2)+ ");\n")
+					incrementeLigne()
+					codeGenerator.append("valeurPile();\n") #c'est une expression, on a alors besoin de suivre notre empiler avec valeurPile
+					incrementeLigne()
 	else:
 		logger.error("Unknown Value!")
 		raise AnaSynException("Unknown Value!")

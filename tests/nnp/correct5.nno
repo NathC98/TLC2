@@ -10,5 +10,6 @@ procedure pp is
   a : integer;
 begin
   a := 5;
-  put(p(2,a))
+  p(2,a);
+  put(a)
 end.

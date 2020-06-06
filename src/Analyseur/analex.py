@@ -52,8 +52,6 @@ def trouverEntreeG(identif):
 		typ = x[0] #
 		if (typ == "function" or typ == "procedure"):
 			return x[1]
-		elif (typ == "out"):
-			return True
 		else:
 			return x[2]
 	else:
@@ -65,6 +63,10 @@ def trouverEntreeG(identif):
 	#Renvoi :
 	#		son adresse
 
+def existIn(ident):
+	if (ident in identifierTableGlobale) :
+		return True
+	return False
 
 def adresse(ident) :
 	if (ident in identifierTableGlobale) :
@@ -106,7 +108,7 @@ class DicoLocal:
 			typ = x[0]
 			if (typ == "function" or typ == "procedure"):
 				return x[1]
-			elif (typ == "out"):
+			elif (typ == "in/out"):
 				return True
 			else:
 				return x[2]
