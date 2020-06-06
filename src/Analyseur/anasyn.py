@@ -17,7 +17,7 @@ LOGGING_LEVEL = logging.DEBUG
 codeGenerator = []
 ligne = 0 #ligne en cours d'écriture dans object_code.txt
 adresse = 0 #adresse rentrées dans la table des identifiers
-operation = "" #operation en cours (mult, sous, add etc)
+operation = [] #operation en cours (mult, sous, add etc)
 adProgram = 0 #pour le tra initial
 traProg = 0 #pour le tra initial
 argcount = 0 #compteur d'arguments à réserver et pour trastat
@@ -84,14 +84,12 @@ def partieDecla(lexical_analyser):
 			codeGenerator.append("reserver(" + str(argcount) + ");\n") #on réserve le bon nombre de variables
 			incrementeLigne()
 			adresse = 0 #on réinitialise le compteur d'adresse puisque l'on passe dans un contexte local
-			argcount = 0 #on réinitialise le compteur d'arguments
 		currentOp = 0 #on est dans le programme principal
 	else :
 		listeDeclaVar(lexical_analyser)
 		codeGenerator.append("reserver(" + str(argcount) + ");\n")#on réserve le bon nombre de variables
 		incrementeLigne()
-		adresse = 0 #on réinitialise le compteur d'adresse puisque l'on passe dans un contexte local
-		argcount = 0 #on réinitialise le compteur d'arguments             
+		adresse = 0 #on réinitialise le compteur d'adresse puisque l'on passe dans un contexte local            
 
 def listeDeclaOp(lexical_analyser):
 	declaOp(lexical_analyser)
@@ -164,6 +162,7 @@ def corpsFonct(lexical_analyser):
 	lexical_analyser.acceptKeyword("end")
 
 def partieFormelle(lexical_analyser):
+	global argcount
 	lexical_analyser.acceptCharacter("(")
 	if not lexical_analyser.isCharacter(")"):
 		listeSpecifFormelles(lexical_analyser)
@@ -210,7 +209,6 @@ def partieDeclaProc(lexical_analyser):
 	codeGenerator.append("reserver(" + str(argcount) + ");\n") #on reserve le bon nombre de variables
 	incrementeLigne()
 	adresse = 0 #on reinitialise les compteurs
-	argcount = 0
 
 def listeDeclaVar(lexical_analyser):
 	declaVar(lexical_analyser)
@@ -219,7 +217,6 @@ def listeDeclaVar(lexical_analyser):
 
 def declaVar(lexical_analyser):
 	global argcount
-	argcount = 0 #on déclare une liste de variable, le compteur est donc initialisé
 	listeIdent(lexical_analyser)
 	lexical_analyser.acceptCharacter(":")
 	logger.debug("now parsing type...")
@@ -229,7 +226,6 @@ def declaVar(lexical_analyser):
 def listeIdent(lexical_analyser):
 	ident = lexical_analyser.acceptIdentifier()
 	logger.debug("identifier found: "+str(ident))
-	incrementeArgcount()
 	if currentOp == 0: #si l'on est dans le programme principal
 		analex.ajouterEntreeG(ident,"identifier",adresse,"") #on ajoute l'identifiant a la table globale
 	else:
@@ -298,8 +294,6 @@ def instr(lexical_analyser):
 			codeGenerator.append("traStat(" + str(analex.adresse(ident)) + "," + str(argcount) + ");\n") #appel de la fonction a la bonne ligne et avec le bon nombre d'arguments
 			incrementeLigne()
 
-			argcount = 0 #on réinitialise le compteur d'arguments de la fonction appelée précedemment
-
 
 
 		else:
@@ -312,7 +306,7 @@ def instr(lexical_analyser):
 
 def listePe(lexical_analyser):
 	expression(lexical_analyser)
-		
+	incrementeArgcount()#on a une variable/expression de plus dans notre liste d'arguments
 	if lexical_analyser.isCharacter(","):
 		lexical_analyser.acceptCharacter(",")
 		listePe(lexical_analyser)
@@ -326,7 +320,7 @@ def expression(lexical_analyser):
 		exp1(lexical_analyser)
 	writeOperation()
 	global operation
-	operation = "" #on est dans une opération unaire ou binaire, on initialise notre mémoire de l'opération en cours
+	operation = [] #on est dans une opération unaire ou binaire, on initialise notre mémoire de l'opération en cours
 
 
         
@@ -358,27 +352,27 @@ def opRel(lexical_analyser):
 	global operation #on va mémoriser l'operation
 	if	lexical_analyser.isSymbol("<"):
 		lexical_analyser.acceptSymbol("<")
-		operation = "<"
+		operation.append("<")
         
 	elif lexical_analyser.isSymbol("<="):
 		lexical_analyser.acceptSymbol("<=")
-		operation = "<="
+		operation.append("<=")
         
 	elif lexical_analyser.isSymbol(">"):
 		lexical_analyser.acceptSymbol(">")
-		operation = ">"
+		operation.append(">")
         
 	elif lexical_analyser.isSymbol(">="):
 		lexical_analyser.acceptSymbol(">=")
-		operation = ">="
+		operation.append(">=")
         
 	elif lexical_analyser.isSymbol("="):
 		lexical_analyser.acceptSymbol("=")
-		operation = "="
+		operation.append("=")
         
 	elif lexical_analyser.isSymbol("/="):
 		lexical_analyser.acceptSymbol("/=")
-		operation = "/="
+		operation.append("/=")
         
 	else:
 		msg = "Unknown relationnal operator <"+ lexical_analyser.get_value() +">!"
@@ -396,11 +390,11 @@ def opAdd(lexical_analyser):
 	logger.debug("parsing additive operator: " + lexical_analyser.get_value())
 	global operation #on va mémoriser l'opération
 	if lexical_analyser.isCharacter("+"):
-		operation = "+"
+		operation.append("+")
 		lexical_analyser.acceptCharacter("+")
                 
 	elif lexical_analyser.isCharacter("-"):
-		operation = "-"
+		operation.append("-")
 		lexical_analyser.acceptCharacter("-")
                 
 	else:
@@ -421,11 +415,11 @@ def opMult(lexical_analyser):
 	logger.debug("parsing multiplicative operator: " + lexical_analyser.get_value())
 	global operation #on va mémoriser l'opération
 	if lexical_analyser.isCharacter("*"):
-		operation = "*"
+		operation.append("*")
 		lexical_analyser.acceptCharacter("*")
                 
 	elif lexical_analyser.isCharacter("/"):
-		operation = "/"
+		operation.append("/")
 		lexical_analyser.acceptCharacter("/")
                 
 	else:
@@ -448,11 +442,11 @@ def opUnaire(lexical_analyser):
 		lexical_analyser.acceptCharacter("+")
                 
 	elif lexical_analyser.isCharacter("-"):
-		operation = "moins"
+		operation.append("moins")
 		lexical_analyser.acceptCharacter("-")
                 
 	elif lexical_analyser.isKeyword("not"):
-		operation = "not"
+		operation.append("not")
 		lexical_analyser.acceptKeyword("not")
                 
 	else:
@@ -475,21 +469,20 @@ def elemPrim(lexical_analyser):
 		global argcount
 		rangeVar = analex.dicoLoc.rangeIdent(ident) #on mémorise la portée de l'identifiant
 		if lexical_analyser.isCharacter("("): #c'est un appel de fonction/procédure
+			argcount = 0 #on initialise notre compteur d'arguments
 			codeGenerator.append("reserverBloc();\n")
 			incrementeLigne()
 			lexical_analyser.acceptCharacter("(")
 			if not lexical_analyser.isCharacter(")"):
 				listePe(lexical_analyser)
-			codeGenerator.append("traStat(" + str(analex.adresse(ident)) + "," + str(argcount) + ");\n")
-			incrementeLigne()
-			
-			argcount = 0
 
 			lexical_analyser.acceptCharacter(")")
 
 
 			logger.debug("parsed procedure call")
-
+			codeGenerator.append("traStat(" + str(analex.adresse(ident)) + "," + str(argcount) + ");\n")
+			incrementeLigne()
+			
 			logger.debug("Call to function: " + ident)
 		else:
 			logger.debug("Use of an identifier as an expression: " + ident) #c'est un identifiant qui est utilisé comme expression
@@ -642,42 +635,55 @@ def incrementeAdresse():
 	adresse = adresse + 1
 
 def writeOperation(): #on écrit dans le code objet l'opération en mémoire
-	if operation == "=":
-		codeGenerator.append("egal();\n")
-		incrementeLigne()
-	elif operation == "moins":
-		codeGenerator.append("moins();\n")
-		incrementeLigne()
-	elif operation == "not":
-		codeGenerator.append("non();\n")
-		incrementeLigne()
-	elif operation == "+":
-		codeGenerator.append("add();\n")
-		incrementeLigne()
-	elif operation == "-":
-		codeGenerator.append("sous();\n")
-		incrementeLigne()
-	elif operation == "*":
-		codeGenerator.append("mult();\n")
-		incrementeLigne()
-	elif operation == "/":
-		codeGenerator.append("div();\n")
-		incrementeLigne()
-	elif operation == "/=":
-		codeGenerator.append("diff();\n")
-		incrementeLigne()
-	elif operation == "<":
-		codeGenerator.append("inf();\n")
-		incrementeLigne()
-	elif operation == "<=":
-		codeGenerator.append("infeq();\n")
-		incrementeLigne()
-	elif operation == ">":
-		codeGenerator.append("sup();\n")
-		incrementeLigne()
-	elif operation == ">=":
-		codeGenerator.append("supeq();\n")
-		incrementeLigne()
+	while operation != [] :
+		if operation[-1] == "=":
+			codeGenerator.append("egal();\n")
+			incrementeLigne()
+			operation.pop(-1)
+		elif operation[-1] == "moins":
+			codeGenerator.append("moins();\n")
+			incrementeLigne()
+			operation.pop(-1)
+		elif operation[-1] == "not":
+			codeGenerator.append("non();\n")
+			incrementeLigne()
+			operation.pop(-1)
+		elif operation[-1] == "+":
+			codeGenerator.append("add();\n")
+			incrementeLigne()
+			operation.pop(-1)
+		elif operation[-1] == "-":
+			codeGenerator.append("sous();\n")
+			incrementeLigne()
+			operation.pop(-1)
+		elif operation[-1] == "*":
+			codeGenerator.append("mult();\n")
+			incrementeLigne()
+			operation.pop(-1)
+		elif operation[-1] == "/":
+			codeGenerator.append("div();\n")
+			incrementeLigne()
+			operation.pop(-1)
+		elif operation[-1] == "/=":
+			codeGenerator.append("diff();\n")
+			incrementeLigne()
+			operation.pop(-1)
+		elif operation[-1] == "<":
+			codeGenerator.append("inf();\n")
+			incrementeLigne()
+			operation.pop(-1)
+		elif operation[-1] == "<=":
+			codeGenerator.append("infeq();\n")
+			incrementeLigne()
+			operation.pop(-1)
+		elif operation[-1] == ">":
+			codeGenerator.append("sup();\n")
+			incrementeLigne()
+			operation.pop(-1)
+		elif operation[-1] == ">=":
+			codeGenerator.append("supeq();\n")
+			incrementeLigne()
+			operation.pop(-1)
 
 def parametreOut(ident):
 	if analex.dicoLoc.trouver(ident):
