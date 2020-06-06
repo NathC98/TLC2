@@ -170,6 +170,7 @@ def partieFormelle(lexical_analyser):
 	lexical_analyser.acceptCharacter(")")
 
 def listeSpecifFormelles(lexical_analyser):
+	incrementeArgcount()
 	specif(lexical_analyser)
 	if not lexical_analyser.isCharacter(")"):
 		lexical_analyser.acceptCharacter(";")
@@ -599,13 +600,13 @@ def altern(lexical_analyser):
 
 	suiteInstr(lexical_analyser)
 
-	ad1 = ligne#on devra se référer a cette ligne dans notre tze
-	codeGenerator[tze] = "tze("+ str(ad1) + "); \n"
 	
 	if lexical_analyser.isKeyword("else"): #c'est une alternative, on suit la même marche que pour les tra et tze précédents
 		tra = len(codeGenerator)
 		codeGenerator.append("complétée plus tard \n")
 		incrementeLigne()
+		ad1 = ligne#on devra se référer a cette ligne dans notre tze
+		codeGenerator[tze] = "tze("+ str(ad1) + "); \n"
 		lexical_analyser.acceptKeyword("else")
 		
 		suiteInstr(lexical_analyser)
